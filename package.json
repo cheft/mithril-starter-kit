@@ -1,0 +1,23 @@
+{
+  "name": "mithril-starter-kit",
+  "version": "0.0.1",
+  "description": "",
+  "main": "webpack.config.js",
+  "scripts": {
+    "start": "webpack-dev-server  --display-error-details --colors --content-base ./ --hot --host 172.16.0.135"
+  },
+  "dependencies": {
+    "mithril": "^0.2.0"
+  },
+  "devDependencies": {
+    "css-loader": "^0.18.0",
+    "style-loader": "^0.12.4",
+    "webpack": "^1.12.1",
+    "webpack-dev-server": "^1.10.1"
+  },
+  "keywords": [
+    "mithril"
+  ],
+  "author": "cheft",
+  "license": "ISC"
+}
