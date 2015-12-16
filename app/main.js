@@ -1,2 +1,2 @@
-require('./router1');
+// require('./router1');
 require('./router2');

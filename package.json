@@ -4,7 +4,7 @@
   "description": "",
   "main": "webpack.config.js",
   "scripts": {
-    "start": "webpack-dev-server  --display-error-details --colors --content-base ./ --hot --host 172.16.0.135"
+    "start": "webpack-dev-server  --display-error-details --colors --content-base ./ --hot --host 0.0.0.0"
   },
   "dependencies": {
     "mithril": "^0.2.0"
