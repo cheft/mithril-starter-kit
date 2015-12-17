@@ -28,14 +28,12 @@ var viewport = {
   },
   view: function(ctrl) {
     return m('ul', [
-      m('li', m('a[href="/"]', {config: m.route}, 'Home')),
-      m('li', m('a[href="/contact"]', {config: m.route}, 'Contact')),
+      m('li', m('a', {config: m.route, href: '/'}, 'Home')),
+      m('li', m('a', {config: m.route, href: '/contact'}, 'Contact')),
       m('div', app[ctrl.path])
     ])
   }
 };
-
-m.route.mode = 'hash';
 
 m.route(document.body, '/', {
     '/': viewport,

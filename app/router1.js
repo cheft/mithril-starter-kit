@@ -2,8 +2,8 @@ var m = require('mithril');
 //a menu template
 var menu = function() {
   return m('div', [
-    m('a[href="/"]', {config: m.route}, 'Home'),
-    m('a[href="/contact"]', {config: m.route}, 'Contact'),
+    m('a[href="/"]', {config: m.route, href: '/'}, 'Home'),
+    m('a[href="/contact"]', {config: m.route, href: '/contact'}, 'Contact'),
     //an expensive-to-initialize DOM element
     m('span', {config: persistent})
   ])
@@ -38,8 +38,6 @@ var Contact = {
     ])
   }
 };
-
-m.route.mode = 'hash';
 
 m.route(document.body, '/', {
   '/': Home,
