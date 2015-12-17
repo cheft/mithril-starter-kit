@@ -16,8 +16,8 @@ module.exports = {
 
   module: {
     loaders: [{
-      test: /\.html$/,
-      loader: 'dot-loader'
+      test: /\.js$/,
+      loader: 'msx-loader'
     }, {
       test: /\.css$/,
       loader: 'style!css'

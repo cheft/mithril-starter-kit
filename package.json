@@ -11,6 +11,7 @@
   },
   "devDependencies": {
     "css-loader": "^0.18.0",
+    "msx-loader": "^0.3.0",
     "style-loader": "^0.12.4",
     "webpack": "^1.12.1",
     "webpack-dev-server": "^1.10.1"
