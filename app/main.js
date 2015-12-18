@@ -3,4 +3,6 @@
 // require('./components/hello');
 // require('./components/draw');
 // require('./components/table');
-require('./components/test');
+// require('./components/test');
+require('./components/request');
+// require('./components/deferred');

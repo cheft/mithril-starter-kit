@@ -7,7 +7,8 @@
     "start": "webpack-dev-server  --display-error-details --colors --content-base ./ --hot --host 0.0.0.0"
   },
   "dependencies": {
-    "mithril": "^0.2.0"
+    "mithril": "^0.2.0",
+    "request": "^2.67.0"
   },
   "devDependencies": {
     "css-loader": "^0.18.0",
