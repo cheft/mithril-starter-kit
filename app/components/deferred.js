@@ -51,7 +51,9 @@ doError('401').then(
       throw new Error('401')
     }
   }
-);
+).catch(function(err, data) {
+  console.log(22222, err, data);
+});
 
 // global
 m.deferred.onerror = function(error) {

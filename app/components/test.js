@@ -53,4 +53,5 @@ var test = {
   }
 };
 
-m.mount(document.body, test);
+// m.mount(document.body, test);
+module.exports = test;

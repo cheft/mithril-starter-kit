@@ -6,12 +6,13 @@ var hello = {
       name: 'world',
       inputName: function(e) {
         ctrl.name = this.value;
-        m.redraw.strategy('diff'); //all  none
+        // m.redraw.strategy('diff'); //all  none
         setTimeout(function() {
           ctrl.name = 'not auto draw 11111';
           // m.startComputation();
           ctrl.age = '22';
-          m.endComputation();
+          // m.endComputation();
+          m.redraw();
         }, 3000);
       }
     };

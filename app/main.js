@@ -6,3 +6,5 @@
 // require('./components/test');
 require('./components/request');
 // require('./components/deferred');
+// require('./components/mithril');
+// require('./components/timeout');

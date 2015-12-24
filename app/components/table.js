@@ -33,6 +33,7 @@ var table = {
 
       config: function(el, isInit) {
         ctrl.time = new Date().getTime();
+
       },
 
       add: function() {
@@ -58,4 +59,5 @@ var table = {
   }
 };
 
-m.mount(document.body, table);
+// m.mount(document.body, table);
+module.exports = table;
