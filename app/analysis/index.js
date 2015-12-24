@@ -41,10 +41,12 @@ module.exports = {
   controller: function(params, done) {
     var scope = {};
     !m.isServer && NProgress.start();
-    m.request({url: config.apiPrefix + 'userCenter/query/statistical'}).then(function(data) {
+    m.request({
+      url: config.apiPrefix + 'userCenter/query/statistical'
+    }).then(function(data) {
       // scope.data = JSON.parse(data);
       scope.data = data;
-      done && done(null, scope);
+      done && done(scope);
       !m.isServer && NProgress.done();
     });
     return scope;

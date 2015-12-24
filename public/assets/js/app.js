@@ -1489,10 +1489,12 @@
 /* 4 */
 /***/ function(module, exports, __webpack_require__) {
 
+	var posts = __webpack_require__(10);
 	var analysis = __webpack_require__(5);
-	var exposure = __webpack_require__(7);
+	var exposure = __webpack_require__(9);
 
 	module.exports = {
+	  '/': posts,
 	  '/analysis': analysis,
 	  '/exposure': exposure
 	};
@@ -1502,9 +1504,9 @@
 /* 5 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var config = __webpack_require__(8);
-	var Menu = __webpack_require__(6);
-	var NProgress = __webpack_require__(9);
+	var config = __webpack_require__(6);
+	var Menu = __webpack_require__(7);
+	var NProgress = __webpack_require__(8);
 
 	module.exports = {
 	  view: function(scope) {
@@ -1545,10 +1547,12 @@
 	  controller: function(params, done) {
 	    var scope = {};
 	    !m.isServer && NProgress.start();
-	    m.request({url: config.apiPrefix + 'userCenter/query/statistical'}).then(function(data) {
+	    m.request({
+	      url: config.apiPrefix + 'userCenter/query/statistical'
+	    }).then(function(data) {
 	      // scope.data = JSON.parse(data);
 	      scope.data = data;
-	      done && done(null, scope);
+	      done && done(scope);
 	      !m.isServer && NProgress.done();
 	    });
 	    return scope;
@@ -1560,9 +1564,20 @@
 /***/ function(module, exports) {
 
 	module.exports = {
+	  apiPrefix: 'http://shanghai.qfang.com/brokerweb/',
+	  dbPrefix: 'http://127.0.0.1:8000/'
+	};
+
+
+/***/ },
+/* 7 */
+/***/ function(module, exports) {
+
+	module.exports = {
 	  view: function(scope) {
 	    return (
 	      {tag: "ul", attrs: {}, children: [
+	        {tag: "li", attrs: {}, children: [{tag: "a", attrs: {config:m.route, href:"/"}, children: ["博客"]}]}, 
 	        {tag: "li", attrs: {}, children: [{tag: "a", attrs: {config:m.route, href:"/exposure"}, children: ["抢曝光"]}]}, 
 	        {tag: "li", attrs: {}, children: [{tag: "a", attrs: {config:m.route, href:"/analysis"}, children: ["我的统计"]}]}
 	      ]}
@@ -1572,68 +1587,7 @@
 
 
 /***/ },
-/* 7 */
-/***/ function(module, exports, __webpack_require__) {
-
-	var config = __webpack_require__(8);
-	var Menu = __webpack_require__(6);
-	var NProgress = __webpack_require__(9);
-
-	module.exports = {
-	  view: function(scope) {
-	    var list = scope.data.result.expertRecommendList;
-	    return (
-	      {tag: "div", attrs: {}, children: [
-	        Menu, 
-	        {tag: "table", attrs: {class:"rob-info tc"}, children: [
-	          {tag: "thead", attrs: {}, children: [
-	            {tag: "tr", attrs: {}, children: [
-	              {tag: "th", attrs: {style:"width:40%;"}, children: ["我的曝光房源"]}, 
-	              {tag: "th", attrs: {style:"width:30%;"}, children: ["曝光时段"]}, 
-	              {tag: "th", attrs: {style:"width:16%;"}, children: ["曝光日点击量"]}, 
-	              {tag: "th", attrs: {style:"width:14%;"}, children: ["状态"]}
-	            ]}
-	          ]}, 
-	          {tag: "tbody", attrs: {}, children: [
-	            list.map(function(item) {return (
-	            {tag: "tr", attrs: {}, children: [
-	              {tag: "td", attrs: {}, children: [{tag: "a", attrs: {class:"alink-blue", href:'http://nanning.qfang.com/sale/' + item.roomCommentId, target:"_blank"}, children: [" [", item.gardenName, "] ", item.bedRoom, "室", item.livingRoom, "厅 ", item.area, " m² ", item.floor, "/", item.totalFloor, "层 "]}]}, 
-	              {tag: "td", attrs: {}, children: [item.showDate, " ", item.showTime]}, 
-	              {tag: "td", attrs: {}, children: [item.clickCount]}, 
-	              {tag: "td", attrs: {}, children: [item.showDateType]}
-	            ]}
-	            )})
-	          ]}
-	        ]}
-	      ]}
-	    )
-	  },
-
-	  controller: function(params, done) {
-	    var scope = {};
-	    !m.isServer && NProgress.start();
-	    m.request({url: config.apiPrefix + 'grabExpose/exposeInfo'}).then(function(data) {
-	      // scope.data = JSON.parse(data);
-	      scope.data = data;
-	      done && done(null, scope);
-	      !m.isServer && NProgress.done();
-	    });
-	    return scope;
-	  }
-	};
-
-
-/***/ },
 /* 8 */
-/***/ function(module, exports) {
-
-	module.exports = {
-	  apiPrefix: 'http://nanning.qfang.com/brokerweb/'
-	};
-
-
-/***/ },
-/* 9 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_RESULT__;/* NProgress, (c) 2013, 2014 Rico Sta. Cruz - http://ricostacruz.com/nprogress
@@ -2112,6 +2066,102 @@
 	  return NProgress;
 	});
 
+
+
+/***/ },
+/* 9 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var config = __webpack_require__(6);
+	var Menu = __webpack_require__(7);
+	var NProgress = __webpack_require__(8);
+
+	module.exports = {
+	  view: function(scope) {
+	    var list = scope.data.result.expertRecommendList;
+	    return (
+	      {tag: "div", attrs: {}, children: [
+	        Menu, 
+	        {tag: "table", attrs: {class:"rob-info tc"}, children: [
+	          {tag: "thead", attrs: {}, children: [
+	            {tag: "tr", attrs: {}, children: [
+	              {tag: "th", attrs: {style:"width:40%;"}, children: ["我的曝光房源"]}, 
+	              {tag: "th", attrs: {style:"width:30%;"}, children: ["曝光时段"]}, 
+	              {tag: "th", attrs: {style:"width:16%;"}, children: ["曝光日点击量"]}, 
+	              {tag: "th", attrs: {style:"width:14%;"}, children: ["状态"]}
+	            ]}
+	          ]}, 
+	          {tag: "tbody", attrs: {}, children: [
+	            list.map(function(item) {return (
+	            {tag: "tr", attrs: {}, children: [
+	              {tag: "td", attrs: {}, children: [{tag: "a", attrs: {class:"alink-blue", href:'http://nanning.qfang.com/sale/' + item.roomCommentId, target:"_blank"}, children: [" [", item.gardenName, "] ", item.bedRoom, "室", item.livingRoom, "厅 ", item.area, " m² ", item.floor, "/", item.totalFloor, "层 "]}]}, 
+	              {tag: "td", attrs: {}, children: [item.showDate, " ", item.showTime]}, 
+	              {tag: "td", attrs: {}, children: [item.clickCount]}, 
+	              {tag: "td", attrs: {}, children: [item.showDateType]}
+	            ]}
+	            )})
+	          ]}
+	        ]}
+	      ]}
+	    )
+	  },
+
+	  controller: function(params, done) {
+	    var scope = {};
+	    !m.isServer && NProgress.start();
+	    m.request({
+	      url: config.apiPrefix + 'grabExpose/exposeInfo',
+	    }).then(function(data) {
+	      // scope.data = JSON.parse(data);
+	      scope.data = data;
+	      done && done(scope);
+	      !m.isServer && NProgress.done();
+	    });
+	    return scope;
+	  }
+	};
+
+
+/***/ },
+/* 10 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var config = __webpack_require__(6);
+	var Menu = __webpack_require__(7);
+	var NProgress = __webpack_require__(8);
+
+	module.exports = {
+	  view: function(scope) {
+	    // var list = scope.data.result.expertRecommendList;
+	    return (
+	      {tag: "div", attrs: {}, children: [
+	        Menu, 
+	        scope.data.map(function(item) {return (
+	        {tag: "div", attrs: {}, children: [
+	          {tag: "h1", attrs: {}, children: [item.title]}, 
+	          {tag: "div", attrs: {}, children: ["author: ", item.author]}, 
+	          {tag: "p", attrs: {}, children: [
+	            item.content
+	          ]}
+	        ]}
+	        )})
+	      ]}
+	    )
+	  },
+
+	  controller: function(params, done) {
+	    var scope = {};
+	    !m.isServer && NProgress.start();
+	    m.request({
+	      url: config.dbPrefix + 'posts',
+	    }).then(function(data) {
+	      scope.data = data;
+	      done && done(scope);
+	      !m.isServer && NProgress.done();
+	    });
+	    return scope;
+	  }
+	};
 
 
 /***/ }
