@@ -12,7 +12,7 @@
     "mithril": "^0.2.2-rc.1",
     "mithril-node-render": "^0.4.1",
     "msx": "^0.4.1",
-    "request": "^2.67.0"
+    "nprogress": "^0.2.0"
   },
   "devDependencies": {
     "css-loader": "^0.18.0",

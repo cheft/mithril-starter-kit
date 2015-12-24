@@ -1,8 +1,7 @@
-var app = require('./src/server')
-var route = require('./src/server/route');
-var router = require('./app/router');
+var app = require('./lib/server')
+var routes = require('./app/routes');
 
-route(null, '/', router, app);
+app.buildRouter('/', routes);
 
 app.get('/', function(req, res) {
   res.send('hello');

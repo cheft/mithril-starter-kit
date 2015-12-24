@@ -5,13 +5,13 @@ module.exports = {
   entry: {
     app: [
       // 'webpack/hot/dev-server',
-      path.resolve('./app/main.js')
+      path.resolve('./lib/client.js')
     ]
   },
   output: {
-    path: path.resolve(__dirname, 'assets/js'),
+    path: path.resolve(__dirname, 'public/assets/js'),
     filename: '[name].js',
-    publicPath: '/assets/js/'
+    publicPath: '/public/assets/js/'
   },
 
   module: {
