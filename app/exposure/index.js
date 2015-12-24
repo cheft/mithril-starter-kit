@@ -34,14 +34,14 @@ module.exports = {
 
   controller: function(params, done) {
     var scope = {};
-    !m.isServer && NProgress.start();
+    m.isClient && NProgress.start();
     m.request({
       url: config.apiPrefix + 'grabExpose/exposeInfo',
     }).then(function(data) {
       // scope.data = JSON.parse(data);
       scope.data = data;
       done && done(scope);
-      !m.isServer && NProgress.done();
+      m.isClient && NProgress.done();
     });
     return scope;
   }

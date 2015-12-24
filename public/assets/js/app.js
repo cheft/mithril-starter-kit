@@ -2108,14 +2108,14 @@
 
 	  controller: function(params, done) {
 	    var scope = {};
-	    !m.isServer && NProgress.start();
+	    m.isClient && NProgress.start();
 	    m.request({
 	      url: config.apiPrefix + 'grabExpose/exposeInfo',
 	    }).then(function(data) {
 	      // scope.data = JSON.parse(data);
 	      scope.data = data;
 	      done && done(scope);
-	      !m.isServer && NProgress.done();
+	      m.isClient && NProgress.done();
 	    });
 	    return scope;
 	  }
@@ -2126,22 +2126,47 @@
 /* 10 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var config = __webpack_require__(6);
 	var Menu = __webpack_require__(7);
-	var NProgress = __webpack_require__(8);
+	var Form = __webpack_require__(12);
+	var List = __webpack_require__(11);
 
 	module.exports = {
 	  view: function(scope) {
-	    // var list = scope.data.result.expertRecommendList;
 	    return (
 	      {tag: "div", attrs: {}, children: [
 	        Menu, 
-	        scope.data.map(function(item) {return (
+	        {tag: "hr", attrs: {}}, 
+	        m.component(Form, {list:List}), 
+	        List
+	      ]}
+	    )
+	  },
+
+	  controller: function(params) {
+	    console.log(this);
+	  }
+	};
+
+
+/***/ },
+/* 11 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var Post = __webpack_require__(13);
+
+	module.exports = {
+	  view: function(scope) {
+	    var list = scope.data || [];
+	    return (
+	      {tag: "div", attrs: {}, children: [
+	        list.map(function(item) {return (
 	        {tag: "div", attrs: {}, children: [
-	          {tag: "h1", attrs: {}, children: [item.title]}, 
-	          {tag: "div", attrs: {}, children: ["author: ", item.author]}, 
+	          {tag: "h1", attrs: {}, children: [item.title()]}, 
+	          {tag: "div", attrs: {}, children: ["author: ", item.author(), " ", {tag: "div", attrs: {style:"float: right;"}, children: [
+	            {tag: "a", attrs: {href:"javascript:;", onclick:Post.remove.bind(scope, item.id())}, children: ["删除"]}]}
+	          ]}, 
 	          {tag: "p", attrs: {}, children: [
-	            item.content
+	            item.content()
 	          ]}
 	        ]}
 	        )})
@@ -2150,18 +2175,89 @@
 	  },
 
 	  controller: function(params, done) {
-	    var scope = {};
-	    !m.isServer && NProgress.start();
-	    m.request({
-	      url: config.dbPrefix + 'posts',
-	    }).then(function(data) {
-	      scope.data = data;
-	      done && done(scope);
-	      !m.isServer && NProgress.done();
-	    });
+	    var scope = {
+
+	      fetch: function() {
+	        Post.list().then(function(data) {
+	          scope.data = data;
+	          done && done(scope);
+	        })
+	        return scope;
+	      }
+	    };
+
+	    return scope.fetch();
+	  }
+	};
+
+
+/***/ },
+/* 12 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var Post = __webpack_require__(13);
+
+	module.exports = {
+	  view: function(scope) {
+	    var list = scope.data;
+	    return (
+	      {tag: "div", attrs: {}, children: [
+	        {tag: "div", attrs: {}, children: [{tag: "input", attrs: {style:"width: 100%;", oninput:m.withAttr('value', scope.contact.title)}}]}, 
+	        {tag: "div", attrs: {}, children: [{tag: "textarea", attrs: {style:"width: 100%;", rows:"10", oninput:m.withAttr('value', scope.contact.content)}}]}, 
+	        {tag: "div", attrs: {}, children: [{tag: "button", attrs: {onclick:scope.save}, children: ["发表"]}]}
+	      ]}
+	    )
+	  },
+
+	  controller: function(params) {
+	    var scope = {
+	      contact: new Post(),
+
+	      save: function() {
+	        Post.save(scope.contact).then(function(data) {
+	        })
+	      }
+	    };
 	    return scope;
 	  }
 	};
+
+
+/***/ },
+/* 13 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var config = __webpack_require__(6);
+
+	var Post = function(data) {
+	  var data = data || {};
+	  this.id = m.prop(data.id || '');
+	  this.title = m.prop(data.title || '');
+	  this.content = m.prop(data.content || '');
+	  this.author = m.prop(data.author || 'cheft');
+	};
+
+	Post.list = function(data) {
+	  return m.request({method: 'GET', url: config.dbPrefix + 'posts', type: Post});
+	};
+
+	Post.save = function(data) {
+	  return m.request({method: 'POST', url: config.dbPrefix + 'posts', data: data});
+	};
+
+	Post.remove = function(id) {
+	  return m.request({method: 'DELETE', url: config.dbPrefix + 'posts/' + id});
+	};
+
+	Post.get = function(id) {
+	  return m.request({method: 'GET', url: config.dbPrefix + 'posts/' + id, type: Post});
+	};
+
+	Post.update = function(data) {
+	  return m.request({method: 'PUT', url: config.dbPrefix + 'posts/' + data.id, data: data});
+	};
+
+	module.exports = Post;
 
 
 /***/ }
