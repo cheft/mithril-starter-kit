@@ -4,7 +4,8 @@
   "description": "",
   "main": "webpack.config.js",
   "scripts": {
-    "start": "webpack-dev-server  --display-error-details --colors --content-base ./ --hot --host 0.0.0.0"
+    "start": "webpack-dev-server  --display-error-details --colors --content-base ./ --hot --host 0.0.0.0",
+    "dev": " webpack -w"
   },
   "dependencies": {
     "body-parser": "^1.14.2",

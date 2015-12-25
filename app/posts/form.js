@@ -21,12 +21,12 @@ module.exports = {
       },
       save: function() {
         Post.save(scope.contact);
-        scope.contact = new Post();
+        Post.trigger('fill', new Post());
         Post.trigger('list');
       }
     };
 
-    Post.on('edit', function(contact) {
+    Post.on('fill', function(contact) {
       scope.contact = contact;
     });
 

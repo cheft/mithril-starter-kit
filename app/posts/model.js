@@ -21,7 +21,7 @@ Post.save = function(data) {
 };
 
 Post.remove = function(id) {
-  return m.request({method: 'DELETE', url: config.dbPrefix + 'posts/' + id}).then(Post.trigger.bind(Post, 'list'));
+  return m.request({method: 'DELETE', url: config.dbPrefix + 'posts/' + id});
 };
 
 module.exports = observable(Post);

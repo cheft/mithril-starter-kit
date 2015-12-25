@@ -1443,8 +1443,8 @@
 				catch (e) {
 					deferred.reject(e);
 				}
-				if (xhrOptions.background !== true) {
-					m.endComputation();
+				finally {
+					if (xhrOptions.background !== true) m.endComputation()
 				}
 			}
 
@@ -1513,15 +1513,15 @@
 	    var list = scope.data || [];
 	    return (
 	      {tag: "div", attrs: {}, children: [
-	        Menu, {tag: "hr", attrs: {}}, Form, {tag: "hr", attrs: {}},
+	        Menu, {tag: "hr", attrs: {}}, Form, {tag: "hr", attrs: {}}, 
 	        {tag: "div", attrs: {}, children: [
 	          list.map(function(item) {return (
 	          {tag: "div", attrs: {}, children: [
-	            {tag: "h1", attrs: {}, children: [item.title]},
+	            {tag: "h1", attrs: {}, children: [item.title]}, 
 	            {tag: "div", attrs: {}, children: ["author: ", item.author, " ", {tag: "div", attrs: {style:"float: right;"}, children: [
-	              {tag: "a", attrs: {href:"javascript:;", onclick:Post.trigger.bind(Post, 'edit', item)}, children: ["编辑"]}, " |",
-	              {tag: "a", attrs: {href:"javascript:;", onclick:Post.remove.bind(scope, item.id)}, children: ["删除"]}]}
-	            ]},
+	              {tag: "a", attrs: {href:"javascript:;", onclick:Post.trigger.bind(Post, 'fill', item)}, children: ["编辑"]}, " |", 
+	              {tag: "a", attrs: {href:"javascript:;", onclick:scope.remove.bind(scope, item.id)}, children: ["删除"]}]}
+	            ]}, 
 	            {tag: "p", attrs: {}, children: [
 	              item.content
 	            ]}
@@ -1533,7 +1533,15 @@
 	  },
 
 	  controller: function(params, done) {
-	    var scope = {};
+	    var scope = {
+	      remove: function(id) {
+	        Post.remove(id).then(function() {
+	          Post.trigger('fill', new Post());
+	          Post.trigger('list');
+	        })
+	      }
+	    };
+
 	    Post.on('list', function() {
 	      Post.list().then(function(data) {
 	        scope.data = data;
@@ -1555,8 +1563,8 @@
 	  view: function(scope) {
 	    return (
 	      {tag: "ul", attrs: {}, children: [
-	        {tag: "li", attrs: {}, children: [{tag: "a", attrs: {config:m.route, href:"/"}, children: ["博客"]}]},
-	        {tag: "li", attrs: {}, children: [{tag: "a", attrs: {config:m.route, href:"/exposure"}, children: ["抢曝光"]}]},
+	        {tag: "li", attrs: {}, children: [{tag: "a", attrs: {config:m.route, href:"/"}, children: ["博客"]}]}, 
+	        {tag: "li", attrs: {}, children: [{tag: "a", attrs: {config:m.route, href:"/exposure"}, children: ["抢曝光"]}]}, 
 	        {tag: "li", attrs: {}, children: [{tag: "a", attrs: {config:m.route, href:"/analysis"}, children: ["我的统计"]}]}
 	      ]}
 	    )
@@ -1575,9 +1583,9 @@
 	    var list = scope.data;
 	    return (
 	      {tag: "div", attrs: {}, children: [
-	        {tag: "div", attrs: {}, children: [{tag: "input", attrs: {type:"hidden", value:scope.contact.id}},
-	        {tag: "input", attrs: {style:"width: 100%;", onkeyup:m.withAttr('value', scope.attr.bind(scope, 'title')), value:scope.contact.title}}]},
-	        {tag: "div", attrs: {}, children: [{tag: "textarea", attrs: {style:"width: 100%;", rows:"10", onkeyup:m.withAttr('value', scope.attr.bind(scope, 'content')), value:scope.contact.content}}]},
+	        {tag: "div", attrs: {}, children: [{tag: "input", attrs: {type:"hidden", value:scope.contact.id}}, 
+	        {tag: "input", attrs: {style:"width: 100%;", onkeyup:m.withAttr('value', scope.attr.bind(scope, 'title')), value:scope.contact.title}}]}, 
+	        {tag: "div", attrs: {}, children: [{tag: "textarea", attrs: {style:"width: 100%;", rows:"10", onkeyup:m.withAttr('value', scope.attr.bind(scope, 'content')), value:scope.contact.content}}]}, 
 	        {tag: "div", attrs: {}, children: [{tag: "button", attrs: {onclick:scope.save}, children: [scope.contact.id ? '保存' : '发表']}]}
 	      ]}
 	    )
@@ -1591,12 +1599,12 @@
 	      },
 	      save: function() {
 	        Post.save(scope.contact);
-	        scope.contact = new Post();
+	        Post.trigger('fill', new Post());
 	        Post.trigger('list');
 	      }
 	    };
 
-	    Post.on('edit', function(contact) {
+	    Post.on('fill', function(contact) {
 	      scope.contact = contact;
 	    });
 
@@ -1632,7 +1640,7 @@
 	};
 
 	Post.remove = function(id) {
-	  return m.request({method: 'DELETE', url: config.dbPrefix + 'posts/' + id}).then(Post.trigger.bind(Post, 'list'));
+	  return m.request({method: 'DELETE', url: config.dbPrefix + 'posts/' + id});
 	};
 
 	module.exports = observable(Post);
@@ -1742,28 +1750,28 @@
 	    var list = scope.data.result;
 	    return (
 	      {tag: "div", attrs: {}, children: [
-	        Menu,
+	        Menu, 
 	        {tag: "table", attrs: {}, children: [
 	          {tag: "thead", attrs: {id:"listHeader"}, children: [
 	            {tag: "tr", attrs: {}, children: [
-	              {tag: "th", attrs: {}, children: ["日期"]},
-	              {tag: "th", attrs: {}, children: [{tag: "a", attrs: {}, children: ["新增", {tag: "i", attrs: {}}]}]},
-	              {tag: "th", attrs: {}, children: [{tag: "a", attrs: {}, children: ["删除", {tag: "i", attrs: {}}]}]},
-	              {tag: "th", attrs: {}, children: [{tag: "a", attrs: {}, children: ["总刷新", {tag: "i", attrs: {}}]}]},
-	              {tag: "th", attrs: {}, children: [{tag: "a", attrs: {}, children: ["标签使用", {tag: "i", attrs: {}}]}]},
-	              {tag: "th", attrs: {}, children: [{tag: "a", attrs: {}, children: ["登陆天数", {tag: "i", attrs: {}}]}]},
+	              {tag: "th", attrs: {}, children: ["日期"]}, 
+	              {tag: "th", attrs: {}, children: [{tag: "a", attrs: {}, children: ["新增", {tag: "i", attrs: {}}]}]}, 
+	              {tag: "th", attrs: {}, children: [{tag: "a", attrs: {}, children: ["删除", {tag: "i", attrs: {}}]}]}, 
+	              {tag: "th", attrs: {}, children: [{tag: "a", attrs: {}, children: ["总刷新", {tag: "i", attrs: {}}]}]}, 
+	              {tag: "th", attrs: {}, children: [{tag: "a", attrs: {}, children: ["标签使用", {tag: "i", attrs: {}}]}]}, 
+	              {tag: "th", attrs: {}, children: [{tag: "a", attrs: {}, children: ["登陆天数", {tag: "i", attrs: {}}]}]}, 
 	              {tag: "th", attrs: {}, children: [{tag: "a", attrs: {}, children: ["日积分", {tag: "i", attrs: {}}]}]}
 	            ]}
-	          ]},
+	          ]}, 
 	          {tag: "tbody", attrs: {}, children: [
 	            list.map(function(item) {return (
 	            {tag: "tr", attrs: {}, children: [
-	              {tag: "td", attrs: {}, children: [item.dataDate]},
-	              {tag: "td", attrs: {}, children: [item.addRoomCount]},
-	              {tag: "td", attrs: {}, children: [item.delRoomCount]},
-	              {tag: "td", attrs: {}, children: [item.useRefurbishCount]},
-	              {tag: "td", attrs: {}, children: [item.useLabelCount]},
-	              {tag: "td", attrs: {}, children: [item.loginCount]},
+	              {tag: "td", attrs: {}, children: [item.dataDate]}, 
+	              {tag: "td", attrs: {}, children: [item.addRoomCount]}, 
+	              {tag: "td", attrs: {}, children: [item.delRoomCount]}, 
+	              {tag: "td", attrs: {}, children: [item.useRefurbishCount]}, 
+	              {tag: "td", attrs: {}, children: [item.useLabelCount]}, 
+	              {tag: "td", attrs: {}, children: [item.loginCount]}, 
 	              {tag: "td", attrs: {}, children: [item.integralCount]}
 	            ]}
 	            )})
@@ -1877,16 +1885,16 @@
 
 	      if (n === 1) {
 	        // Fade out
-	        css(progress, {
-	          transition: 'none',
-	          opacity: 1
+	        css(progress, { 
+	          transition: 'none', 
+	          opacity: 1 
 	        });
 	        progress.offsetWidth; /* Repaint */
 
 	        setTimeout(function() {
-	          css(progress, {
-	            transition: 'all ' + speed + 'ms linear',
-	            opacity: 0
+	          css(progress, { 
+	            transition: 'all ' + speed + 'ms linear', 
+	            opacity: 0 
 	          });
 	          setTimeout(function() {
 	            NProgress.remove();
@@ -2014,7 +2022,7 @@
 	    if (NProgress.isRendered()) return document.getElementById('nprogress');
 
 	    addClass(document.documentElement, 'nprogress-busy');
-
+	    
 	    var progress = document.createElement('div');
 	    progress.id = 'nprogress';
 	    progress.innerHTML = Settings.template;
@@ -2023,7 +2031,7 @@
 	        perc     = fromStart ? '-100' : toBarPerc(NProgress.status || 0),
 	        parent   = document.querySelector(Settings.parent),
 	        spinner;
-
+	    
 	    css(bar, {
 	      transition: 'all 0 linear',
 	      transform: 'translate3d(' + perc + '%,0,0)'
@@ -2134,7 +2142,7 @@
 
 	  var queue = (function() {
 	    var pending = [];
-
+	    
 	    function next() {
 	      var fn = pending.shift();
 	      if (fn) {
@@ -2149,10 +2157,10 @@
 	  })();
 
 	  /**
-	   * (Internal) Applies css properties to an element, similar to the jQuery
+	   * (Internal) Applies css properties to an element, similar to the jQuery 
 	   * css method.
 	   *
-	   * While this helper does assist with vendor prefixed property names, it
+	   * While this helper does assist with vendor prefixed property names, it 
 	   * does not perform any manipulation of values prior to setting styles.
 	   */
 
@@ -2193,7 +2201,7 @@
 
 	    return function(element, properties) {
 	      var args = arguments,
-	          prop,
+	          prop, 
 	          value;
 
 	      if (args.length == 2) {
@@ -2224,7 +2232,7 @@
 	    var oldList = classList(element),
 	        newList = oldList + name;
 
-	    if (hasClass(oldList, name)) return;
+	    if (hasClass(oldList, name)) return; 
 
 	    // Trim the opening space.
 	    element.className = newList.substring(1);
@@ -2248,8 +2256,8 @@
 	  }
 
 	  /**
-	   * (Internal) Gets a space separated list of the class names on the element.
-	   * The list is wrapped with a single space on each end to facilitate finding
+	   * (Internal) Gets a space separated list of the class names on the element. 
+	   * The list is wrapped with a single space on each end to facilitate finding 
 	   * matches within the list.
 	   */
 
@@ -2283,22 +2291,22 @@
 	    var list = scope.data.result.expertRecommendList;
 	    return (
 	      {tag: "div", attrs: {}, children: [
-	        Menu,
+	        Menu, 
 	        {tag: "table", attrs: {}, children: [
 	          {tag: "thead", attrs: {}, children: [
 	            {tag: "tr", attrs: {}, children: [
-	              {tag: "th", attrs: {style:"width:40%;"}, children: ["我的曝光房源"]},
-	              {tag: "th", attrs: {style:"width:30%;"}, children: ["曝光时段"]},
-	              {tag: "th", attrs: {style:"width:16%;"}, children: ["曝光日点击量"]},
+	              {tag: "th", attrs: {style:"width:40%;"}, children: ["我的曝光房源"]}, 
+	              {tag: "th", attrs: {style:"width:30%;"}, children: ["曝光时段"]}, 
+	              {tag: "th", attrs: {style:"width:16%;"}, children: ["曝光日点击量"]}, 
 	              {tag: "th", attrs: {style:"width:14%;"}, children: ["状态"]}
 	            ]}
-	          ]},
+	          ]}, 
 	          {tag: "tbody", attrs: {}, children: [
 	            list.map(function(item) {return (
 	            {tag: "tr", attrs: {}, children: [
-	              {tag: "td", attrs: {}, children: [{tag: "a", attrs: {href:'http://nanning.qfang.com/sale/' + item.roomCommentId, target:"_blank"}, children: [" [", item.gardenName, "] ", item.bedRoom, "室", item.livingRoom, "厅 ", item.area, " m² ", item.floor, "/", item.totalFloor, "层 "]}]},
-	              {tag: "td", attrs: {}, children: [item.showDate, " ", item.showTime]},
-	              {tag: "td", attrs: {}, children: [item.clickCount]},
+	              {tag: "td", attrs: {}, children: [{tag: "a", attrs: {href:'http://nanning.qfang.com/sale/' + item.roomCommentId, target:"_blank"}, children: [" [", item.gardenName, "] ", item.bedRoom, "室", item.livingRoom, "厅 ", item.area, " m² ", item.floor, "/", item.totalFloor, "层 "]}]}, 
+	              {tag: "td", attrs: {}, children: [item.showDate, " ", item.showTime]}, 
+	              {tag: "td", attrs: {}, children: [item.clickCount]}, 
 	              {tag: "td", attrs: {}, children: [item.showDateType]}
 	            ]}
 	            )})
