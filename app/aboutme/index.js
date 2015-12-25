@@ -15,7 +15,11 @@ module.exports = {
   },
 
   controller: function(params, done) {
-    m.isClient && NProgress.start();
+    if (m.isClient) {
+      document.title = '关于我';
+      NProgress.start();
+    }
+
     var scope = {
       renderComplete: function(el, isInit) {
         !isInit && m.isClient && NProgress.done();

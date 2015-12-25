@@ -1536,7 +1536,11 @@
 	  },
 
 	  controller: function(params, done) {
-	    m.isClient && NProgress.start();
+	    if (m.isClient) {
+	      document.title = '我的博客';
+	      NProgress.start();
+	    }
+
 	    var scope = {
 	      renderComplete: function(el, isInit) {
 	        !isInit && m.isClient && NProgress.done();
@@ -1547,6 +1551,10 @@
 	          Post.trigger('fill', new Post());
 	          Post.trigger('list');
 	        })
+	      },
+
+	      onunload: function() {
+	        Post.off('*');
 	      }
 	    };
 
@@ -2362,7 +2370,11 @@
 	  },
 
 	  controller: function(params, done) {
-	    m.isClient && NProgress.start();
+	    if (m.isClient) {
+	      document.title = '关于我';
+	      NProgress.start();
+	    }
+
 	    var scope = {
 	      renderComplete: function(el, isInit) {
 	        !isInit && m.isClient && NProgress.done();

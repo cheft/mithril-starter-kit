@@ -28,7 +28,11 @@ module.exports = {
   },
 
   controller: function(params, done) {
-    m.isClient && NProgress.start();
+    if (m.isClient) {
+      document.title = '我的博客';
+      NProgress.start();
+    }
+
     var scope = {
       renderComplete: function(el, isInit) {
         !isInit && m.isClient && NProgress.done();
@@ -39,6 +43,10 @@ module.exports = {
           Post.trigger('fill', new Post());
           Post.trigger('list');
         })
+      },
+
+      onunload: function() {
+        Post.off('*');
       }
     };
 
