@@ -2128,29 +2128,6 @@
 
 	var Menu = __webpack_require__(7);
 	var Form = __webpack_require__(12);
-	var List = __webpack_require__(11);
-
-	module.exports = {
-	  view: function(scope) {
-	    return (
-	      {tag: "div", attrs: {}, children: [
-	        Menu, 
-	        {tag: "hr", attrs: {}}, 
-	        Form, 
-	        List
-	      ]}
-	    )
-	  },
-
-	  controller: function(params) {
-	  }
-	};
-
-
-/***/ },
-/* 11 */
-/***/ function(module, exports, __webpack_require__) {
-
 	var Post = __webpack_require__(13);
 
 	module.exports = {
@@ -2158,25 +2135,27 @@
 	    var list = scope.data || [];
 	    return (
 	      {tag: "div", attrs: {}, children: [
-	        list.map(function(item) {return (
+	        Menu, {tag: "hr", attrs: {}}, Form, {tag: "hr", attrs: {}}, 
 	        {tag: "div", attrs: {}, children: [
-	          {tag: "h1", attrs: {}, children: [item.title()]}, 
-	          {tag: "div", attrs: {}, children: ["author: ", item.author(), " ", {tag: "div", attrs: {style:"float: right;"}, children: [
-	            {tag: "a", attrs: {href:"javascript:;", onclick:Post.trigger.bind(Post, 'edit', item)}, children: ["编辑"]}, " |", 
-	            {tag: "a", attrs: {href:"javascript:;", onclick:Post.remove.bind(scope, item.id())}, children: ["删除"]}]}
-	          ]}, 
-	          {tag: "p", attrs: {}, children: [
-	            item.content()
+	          list.map(function(item) {return (
+	          {tag: "div", attrs: {}, children: [
+	            {tag: "h1", attrs: {}, children: [item.title]}, 
+	            {tag: "div", attrs: {}, children: ["author: ", item.author, " ", {tag: "div", attrs: {style:"float: right;"}, children: [
+	              {tag: "a", attrs: {href:"javascript:;", onclick:Post.trigger.bind(Post, 'edit', item)}, children: ["编辑"]}, " |", 
+	              {tag: "a", attrs: {href:"javascript:;", onclick:Post.remove.bind(scope, item.id)}, children: ["删除"]}]}
+	            ]}, 
+	            {tag: "p", attrs: {}, children: [
+	              item.content
+	            ]}
 	          ]}
+	          )})
 	        ]}
-	        )})
 	      ]}
 	    )
 	  },
 
 	  controller: function(params, done) {
 	    var scope = {};
-
 	    Post.on('list', function() {
 	      Post.list().then(function(data) {
 	        scope.data = data;
@@ -2191,6 +2170,7 @@
 
 
 /***/ },
+/* 11 */,
 /* 12 */
 /***/ function(module, exports, __webpack_require__) {
 
@@ -2201,9 +2181,10 @@
 	    var list = scope.data;
 	    return (
 	      {tag: "div", attrs: {}, children: [
-	        {tag: "div", attrs: {}, children: [{tag: "input", attrs: {type:"hidden", value:scope.contact.id()}}, {tag: "input", attrs: {style:"width: 100%;", oninput:m.withAttr('value', scope.contact.title), value:scope.contact.title()}}]}, 
-	        {tag: "div", attrs: {}, children: [{tag: "textarea", attrs: {style:"width: 100%;", rows:"10", oninput:m.withAttr('value', scope.contact.content)}, children: [scope.contact.content()]}]}, 
-	        {tag: "div", attrs: {}, children: [{tag: "button", attrs: {onclick:scope.save}, children: [scope.contact.id() ? '保存' : '发表']}]}
+	        {tag: "div", attrs: {}, children: [{tag: "input", attrs: {type:"hidden", oninput:m.withAttr('value', scope.attr.bind(scope, 'id')), value:scope.contact.id}}, 
+	        {tag: "input", attrs: {style:"width: 100%;", oninput:m.withAttr('value', scope.attr.bind(scope, 'title')), value:scope.contact.title}}]}, 
+	        {tag: "div", attrs: {}, children: [{tag: "textarea", attrs: {style:"width: 100%;", rows:"10", oninput:m.withAttr('value', scope.attr.bind(scope, 'content')), value:scope.contact.content}}]}, 
+	        {tag: "div", attrs: {}, children: [{tag: "button", attrs: {onclick:scope.save}, children: [scope.contact.id ? '保存' : '发表']}]}
 	      ]}
 	    )
 	  },
@@ -2211,6 +2192,9 @@
 	  controller: function(params) {
 	    var scope = {
 	      contact: new Post(),
+	      attr: function(prop, value) {
+	        scope.contact[prop] = value;
+	      },
 	      save: function() {
 	        Post.save(scope.contact);
 	        scope.contact = new Post();
@@ -2236,29 +2220,25 @@
 
 	var Post = function(data) {
 	  var data = data || {};
-	  this.id = m.prop(data.id || '');
-	  this.title = m.prop(data.title || '');
-	  this.content = m.prop(data.content || '');
-	  this.author = m.prop(data.author || 'cheft');
+	  this.id = data.id || '';
+	  this.title = data.title || '';
+	  this.content = data.content || '';
+	  this.author = data.author || 'cheft';
 	};
 
 	Post.list = function() {
-	  return m.request({method: 'GET', url: config.dbPrefix + 'posts', type: Post});
+	  return m.request({method: 'GET', url: config.dbPrefix + 'posts'});
 	};
 
 	Post.save = function(data) {
-	  if (data.id()) {
-	    return m.request({method: 'PUT', url: config.dbPrefix + 'posts/' + data.id(), data: data});
+	  if (data.id) {
+	    return m.request({method: 'PUT', url: config.dbPrefix + 'posts/' + data.id, data: data});
 	  }
 	  return m.request({method: 'POST', url: config.dbPrefix + 'posts', data: data});
 	};
 
 	Post.remove = function(id) {
 	  return m.request({method: 'DELETE', url: config.dbPrefix + 'posts/' + id}).then(Post.trigger.bind(Post, 'list'));
-	};
-
-	Post.get = function(id) {
-	  return m.request({method: 'GET', url: config.dbPrefix + 'posts/' + id, type: Post});
 	};
 
 	module.exports = observable(Post);
