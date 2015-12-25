@@ -1,4 +1,4 @@
 module.exports = {
   apiPrefix: 'http://shanghai.qfang.com/brokerweb/',
-  dbPrefix: 'http://127.0.0.1:8000/'
+  dbPrefix: 'http://172.16.0.135:3000/api/'
 };

@@ -1443,8 +1443,8 @@
 				catch (e) {
 					deferred.reject(e);
 				}
-				finally {
-					if (xhrOptions.background !== true) m.endComputation()
+				if (xhrOptions.background !== true) {
+					m.endComputation();
 				}
 			}
 
@@ -1489,9 +1489,9 @@
 /* 4 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var posts = __webpack_require__(10);
-	var analysis = __webpack_require__(5);
-	var exposure = __webpack_require__(9);
+	var posts = __webpack_require__(5);
+	var analysis = __webpack_require__(11);
+	var exposure = __webpack_require__(13);
 
 	module.exports = {
 	  '/': posts,
@@ -1504,37 +1504,266 @@
 /* 5 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var config = __webpack_require__(6);
-	var Menu = __webpack_require__(7);
-	var NProgress = __webpack_require__(8);
+	var Menu = __webpack_require__(6);
+	var Form = __webpack_require__(7);
+	var Post = __webpack_require__(8);
+
+	module.exports = {
+	  view: function(scope) {
+	    var list = scope.data || [];
+	    return (
+	      {tag: "div", attrs: {}, children: [
+	        Menu, {tag: "hr", attrs: {}}, Form, {tag: "hr", attrs: {}},
+	        {tag: "div", attrs: {}, children: [
+	          list.map(function(item) {return (
+	          {tag: "div", attrs: {}, children: [
+	            {tag: "h1", attrs: {}, children: [item.title]},
+	            {tag: "div", attrs: {}, children: ["author: ", item.author, " ", {tag: "div", attrs: {style:"float: right;"}, children: [
+	              {tag: "a", attrs: {href:"javascript:;", onclick:Post.trigger.bind(Post, 'edit', item)}, children: ["编辑"]}, " |",
+	              {tag: "a", attrs: {href:"javascript:;", onclick:Post.remove.bind(scope, item.id)}, children: ["删除"]}]}
+	            ]},
+	            {tag: "p", attrs: {}, children: [
+	              item.content
+	            ]}
+	          ]}
+	          )})
+	        ]}
+	      ]}
+	    )
+	  },
+
+	  controller: function(params, done) {
+	    var scope = {};
+	    Post.on('list', function() {
+	      Post.list().then(function(data) {
+	        scope.data = data;
+	        done && done(scope);
+	      })
+	    });
+
+	    Post.trigger('list');
+	    return scope;
+	  }
+	};
+
+
+/***/ },
+/* 6 */
+/***/ function(module, exports) {
+
+	module.exports = {
+	  view: function(scope) {
+	    return (
+	      {tag: "ul", attrs: {}, children: [
+	        {tag: "li", attrs: {}, children: [{tag: "a", attrs: {config:m.route, href:"/"}, children: ["博客"]}]},
+	        {tag: "li", attrs: {}, children: [{tag: "a", attrs: {config:m.route, href:"/exposure"}, children: ["抢曝光"]}]},
+	        {tag: "li", attrs: {}, children: [{tag: "a", attrs: {config:m.route, href:"/analysis"}, children: ["我的统计"]}]}
+	      ]}
+	    )
+	  }
+	};
+
+
+/***/ },
+/* 7 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var Post = __webpack_require__(8);
+
+	module.exports = {
+	  view: function(scope) {
+	    var list = scope.data;
+	    return (
+	      {tag: "div", attrs: {}, children: [
+	        {tag: "div", attrs: {}, children: [{tag: "input", attrs: {type:"hidden", value:scope.contact.id}},
+	        {tag: "input", attrs: {style:"width: 100%;", onkeyup:m.withAttr('value', scope.attr.bind(scope, 'title')), value:scope.contact.title}}]},
+	        {tag: "div", attrs: {}, children: [{tag: "textarea", attrs: {style:"width: 100%;", rows:"10", onkeyup:m.withAttr('value', scope.attr.bind(scope, 'content')), value:scope.contact.content}}]},
+	        {tag: "div", attrs: {}, children: [{tag: "button", attrs: {onclick:scope.save}, children: [scope.contact.id ? '保存' : '发表']}]}
+	      ]}
+	    )
+	  },
+
+	  controller: function(params) {
+	    var scope = {
+	      contact: new Post(),
+	      attr: function(prop, value) {
+	        scope.contact[prop] = value;
+	      },
+	      save: function() {
+	        Post.save(scope.contact);
+	        scope.contact = new Post();
+	        Post.trigger('list');
+	      }
+	    };
+
+	    Post.on('edit', function(contact) {
+	      scope.contact = contact;
+	    });
+
+	    return scope;
+	  }
+	};
+
+
+/***/ },
+/* 8 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var config = __webpack_require__(9);
+	var observable = __webpack_require__(10);
+
+	var Post = function(data) {
+	  var data = data || {};
+	  this.id = data.id || '';
+	  this.title = data.title || '';
+	  this.content = data.content || '';
+	  this.author = data.author || 'cheft';
+	};
+
+	Post.list = function() {
+	  return m.request({method: 'GET', url: config.dbPrefix + 'posts'});
+	};
+
+	Post.save = function(data) {
+	  if (data.id) {
+	    return m.request({method: 'PUT', url: config.dbPrefix + 'posts/' + data.id, data: data});
+	  }
+	  return m.request({method: 'POST', url: config.dbPrefix + 'posts', data: data});
+	};
+
+	Post.remove = function(id) {
+	  return m.request({method: 'DELETE', url: config.dbPrefix + 'posts/' + id}).then(Post.trigger.bind(Post, 'list'));
+	};
+
+	module.exports = observable(Post);
+
+
+/***/ },
+/* 9 */
+/***/ function(module, exports) {
+
+	module.exports = {
+	  apiPrefix: 'http://shanghai.qfang.com/brokerweb/',
+	  dbPrefix: 'http://172.16.0.135:3000/api/'
+	};
+
+
+/***/ },
+/* 10 */
+/***/ function(module, exports) {
+
+	module.exports = function(el) {
+	  el = el || {};
+	  var callbacks = {};
+	  var _id = 0;
+
+	  el.on = function(events, fn) {
+	    if (typeof fn == 'function') {
+	      if (typeof fn.id == 'undefined') {
+	        fn._id = _id++;
+	      }
+
+	      events.replace(/\S+/g, function(name, pos) {
+	        (callbacks[name] = callbacks[name] || []).push(fn);
+	        fn.typed = pos > 0;
+	      });
+	    }
+
+	    return el;
+	  };
+
+	  el.off = function(events, fn) {
+	    if (events == '*') {
+	      callbacks = {};
+	    }else {
+	      events.replace(/\S+/g, function(name) {
+	        if (fn) {
+	          var arr = callbacks[name];
+	          for (var i = 0, cb; (cb = arr && arr[i]); ++i) {
+	            if (cb._id == fn._id) {
+	              arr.splice(i--, 1);
+	            }
+	          }
+	        } else {
+	          callbacks[name] = [];
+	        }
+	      });
+	    }
+
+	    return el;
+	  };
+
+	  // only single event supported
+	  el.one = function(name, fn) {
+	    function on() {
+	      el.off(name, on);
+	      fn.apply(el, arguments);
+	    }
+
+	    return el.on(name, on);
+	  };
+
+	  el.trigger = function(name) {
+	    var args = [].slice.call(arguments, 1);
+	    var fns = callbacks[name] || [];
+
+	    for (var i = 0, fn; (fn = fns[i]); ++i) {
+	      if (!fn.busy) {
+	        fn.busy = 1;
+	        fn.apply(el, fn.typed ? [name].concat(args) : args);
+	        if (fns[i] !== fn) {
+	          i--;
+	        }
+
+	        fn.busy = 0;
+	      }
+	    }
+
+	    if (callbacks.all && name != 'all') {
+	      el.trigger.apply(el, ['all', name].concat(args));
+	    }
+
+	    return el;
+	  };
+
+	  return el;
+	};
+
+/***/ },
+/* 11 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var config = __webpack_require__(9);
+	var Menu = __webpack_require__(6);
+	var NProgress = __webpack_require__(12);
 
 	module.exports = {
 	  view: function(scope) {
 	    var list = scope.data.result;
 	    return (
 	      {tag: "div", attrs: {}, children: [
-	        Menu, 
+	        Menu,
 	        {tag: "table", attrs: {}, children: [
 	          {tag: "thead", attrs: {id:"listHeader"}, children: [
 	            {tag: "tr", attrs: {}, children: [
-	              {tag: "th", attrs: {}, children: ["日期"]}, 
-	              {tag: "th", attrs: {}, children: [{tag: "a", attrs: {}, children: ["新增", {tag: "i", attrs: {class:"iconfont icon-jiantou10"}}]}]}, 
-	              {tag: "th", attrs: {}, children: [{tag: "a", attrs: {}, children: ["删除", {tag: "i", attrs: {class:"iconfont icon-jiantou10"}}]}]}, 
-	              {tag: "th", attrs: {}, children: [{tag: "a", attrs: {}, children: ["总刷新", {tag: "i", attrs: {class:"iconfont icon-jiantou10"}}]}]}, 
-	              {tag: "th", attrs: {}, children: [{tag: "a", attrs: {}, children: ["标签使用", {tag: "i", attrs: {class:"iconfont icon-jiantou10"}}]}]}, 
-	              {tag: "th", attrs: {}, children: [{tag: "a", attrs: {}, children: ["登陆天数", {tag: "i", attrs: {class:"iconfont icon-jiantou10"}}]}]}, 
-	              {tag: "th", attrs: {}, children: [{tag: "a", attrs: {}, children: ["日积分", {tag: "i", attrs: {class:"iconfont icon-jiantou10"}}]}]}
+	              {tag: "th", attrs: {}, children: ["日期"]},
+	              {tag: "th", attrs: {}, children: [{tag: "a", attrs: {}, children: ["新增", {tag: "i", attrs: {}}]}]},
+	              {tag: "th", attrs: {}, children: [{tag: "a", attrs: {}, children: ["删除", {tag: "i", attrs: {}}]}]},
+	              {tag: "th", attrs: {}, children: [{tag: "a", attrs: {}, children: ["总刷新", {tag: "i", attrs: {}}]}]},
+	              {tag: "th", attrs: {}, children: [{tag: "a", attrs: {}, children: ["标签使用", {tag: "i", attrs: {}}]}]},
+	              {tag: "th", attrs: {}, children: [{tag: "a", attrs: {}, children: ["登陆天数", {tag: "i", attrs: {}}]}]},
+	              {tag: "th", attrs: {}, children: [{tag: "a", attrs: {}, children: ["日积分", {tag: "i", attrs: {}}]}]}
 	            ]}
-	          ]}, 
+	          ]},
 	          {tag: "tbody", attrs: {}, children: [
 	            list.map(function(item) {return (
 	            {tag: "tr", attrs: {}, children: [
-	              {tag: "td", attrs: {}, children: [item.dataDate]}, 
-	              {tag: "td", attrs: {}, children: [item.addRoomCount]}, 
-	              {tag: "td", attrs: {}, children: [item.delRoomCount]}, 
-	              {tag: "td", attrs: {}, children: [item.useRefurbishCount]}, 
-	              {tag: "td", attrs: {}, children: [item.useLabelCount]}, 
-	              {tag: "td", attrs: {}, children: [item.loginCount]}, 
+	              {tag: "td", attrs: {}, children: [item.dataDate]},
+	              {tag: "td", attrs: {}, children: [item.addRoomCount]},
+	              {tag: "td", attrs: {}, children: [item.delRoomCount]},
+	              {tag: "td", attrs: {}, children: [item.useRefurbishCount]},
+	              {tag: "td", attrs: {}, children: [item.useLabelCount]},
+	              {tag: "td", attrs: {}, children: [item.loginCount]},
 	              {tag: "td", attrs: {}, children: [item.integralCount]}
 	            ]}
 	            )})
@@ -1560,34 +1789,7 @@
 	}
 
 /***/ },
-/* 6 */
-/***/ function(module, exports) {
-
-	module.exports = {
-	  apiPrefix: 'http://shanghai.qfang.com/brokerweb/',
-	  dbPrefix: 'http://127.0.0.1:8000/'
-	};
-
-
-/***/ },
-/* 7 */
-/***/ function(module, exports) {
-
-	module.exports = {
-	  view: function(scope) {
-	    return (
-	      {tag: "ul", attrs: {}, children: [
-	        {tag: "li", attrs: {}, children: [{tag: "a", attrs: {config:m.route, href:"/"}, children: ["博客"]}]}, 
-	        {tag: "li", attrs: {}, children: [{tag: "a", attrs: {config:m.route, href:"/exposure"}, children: ["抢曝光"]}]}, 
-	        {tag: "li", attrs: {}, children: [{tag: "a", attrs: {config:m.route, href:"/analysis"}, children: ["我的统计"]}]}
-	      ]}
-	    )
-	  }
-	};
-
-
-/***/ },
-/* 8 */
+/* 12 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_RESULT__;/* NProgress, (c) 2013, 2014 Rico Sta. Cruz - http://ricostacruz.com/nprogress
@@ -1675,16 +1877,16 @@
 
 	      if (n === 1) {
 	        // Fade out
-	        css(progress, { 
-	          transition: 'none', 
-	          opacity: 1 
+	        css(progress, {
+	          transition: 'none',
+	          opacity: 1
 	        });
 	        progress.offsetWidth; /* Repaint */
 
 	        setTimeout(function() {
-	          css(progress, { 
-	            transition: 'all ' + speed + 'ms linear', 
-	            opacity: 0 
+	          css(progress, {
+	            transition: 'all ' + speed + 'ms linear',
+	            opacity: 0
 	          });
 	          setTimeout(function() {
 	            NProgress.remove();
@@ -1812,7 +2014,7 @@
 	    if (NProgress.isRendered()) return document.getElementById('nprogress');
 
 	    addClass(document.documentElement, 'nprogress-busy');
-	    
+
 	    var progress = document.createElement('div');
 	    progress.id = 'nprogress';
 	    progress.innerHTML = Settings.template;
@@ -1821,7 +2023,7 @@
 	        perc     = fromStart ? '-100' : toBarPerc(NProgress.status || 0),
 	        parent   = document.querySelector(Settings.parent),
 	        spinner;
-	    
+
 	    css(bar, {
 	      transition: 'all 0 linear',
 	      transform: 'translate3d(' + perc + '%,0,0)'
@@ -1932,7 +2134,7 @@
 
 	  var queue = (function() {
 	    var pending = [];
-	    
+
 	    function next() {
 	      var fn = pending.shift();
 	      if (fn) {
@@ -1947,10 +2149,10 @@
 	  })();
 
 	  /**
-	   * (Internal) Applies css properties to an element, similar to the jQuery 
+	   * (Internal) Applies css properties to an element, similar to the jQuery
 	   * css method.
 	   *
-	   * While this helper does assist with vendor prefixed property names, it 
+	   * While this helper does assist with vendor prefixed property names, it
 	   * does not perform any manipulation of values prior to setting styles.
 	   */
 
@@ -1991,7 +2193,7 @@
 
 	    return function(element, properties) {
 	      var args = arguments,
-	          prop, 
+	          prop,
 	          value;
 
 	      if (args.length == 2) {
@@ -2022,7 +2224,7 @@
 	    var oldList = classList(element),
 	        newList = oldList + name;
 
-	    if (hasClass(oldList, name)) return; 
+	    if (hasClass(oldList, name)) return;
 
 	    // Trim the opening space.
 	    element.className = newList.substring(1);
@@ -2046,8 +2248,8 @@
 	  }
 
 	  /**
-	   * (Internal) Gets a space separated list of the class names on the element. 
-	   * The list is wrapped with a single space on each end to facilitate finding 
+	   * (Internal) Gets a space separated list of the class names on the element.
+	   * The list is wrapped with a single space on each end to facilitate finding
 	   * matches within the list.
 	   */
 
@@ -2069,34 +2271,34 @@
 
 
 /***/ },
-/* 9 */
+/* 13 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var config = __webpack_require__(6);
-	var Menu = __webpack_require__(7);
-	var NProgress = __webpack_require__(8);
+	var config = __webpack_require__(9);
+	var Menu = __webpack_require__(6);
+	var NProgress = __webpack_require__(12);
 
 	module.exports = {
 	  view: function(scope) {
 	    var list = scope.data.result.expertRecommendList;
 	    return (
 	      {tag: "div", attrs: {}, children: [
-	        Menu, 
-	        {tag: "table", attrs: {class:"rob-info tc"}, children: [
+	        Menu,
+	        {tag: "table", attrs: {}, children: [
 	          {tag: "thead", attrs: {}, children: [
 	            {tag: "tr", attrs: {}, children: [
-	              {tag: "th", attrs: {style:"width:40%;"}, children: ["我的曝光房源"]}, 
-	              {tag: "th", attrs: {style:"width:30%;"}, children: ["曝光时段"]}, 
-	              {tag: "th", attrs: {style:"width:16%;"}, children: ["曝光日点击量"]}, 
+	              {tag: "th", attrs: {style:"width:40%;"}, children: ["我的曝光房源"]},
+	              {tag: "th", attrs: {style:"width:30%;"}, children: ["曝光时段"]},
+	              {tag: "th", attrs: {style:"width:16%;"}, children: ["曝光日点击量"]},
 	              {tag: "th", attrs: {style:"width:14%;"}, children: ["状态"]}
 	            ]}
-	          ]}, 
+	          ]},
 	          {tag: "tbody", attrs: {}, children: [
 	            list.map(function(item) {return (
 	            {tag: "tr", attrs: {}, children: [
-	              {tag: "td", attrs: {}, children: [{tag: "a", attrs: {class:"alink-blue", href:'http://nanning.qfang.com/sale/' + item.roomCommentId, target:"_blank"}, children: [" [", item.gardenName, "] ", item.bedRoom, "室", item.livingRoom, "厅 ", item.area, " m² ", item.floor, "/", item.totalFloor, "层 "]}]}, 
-	              {tag: "td", attrs: {}, children: [item.showDate, " ", item.showTime]}, 
-	              {tag: "td", attrs: {}, children: [item.clickCount]}, 
+	              {tag: "td", attrs: {}, children: [{tag: "a", attrs: {href:'http://nanning.qfang.com/sale/' + item.roomCommentId, target:"_blank"}, children: [" [", item.gardenName, "] ", item.bedRoom, "室", item.livingRoom, "厅 ", item.area, " m² ", item.floor, "/", item.totalFloor, "层 "]}]},
+	              {tag: "td", attrs: {}, children: [item.showDate, " ", item.showTime]},
+	              {tag: "td", attrs: {}, children: [item.clickCount]},
 	              {tag: "td", attrs: {}, children: [item.showDateType]}
 	            ]}
 	            )})
@@ -2110,7 +2312,7 @@
 	    var scope = {};
 	    m.isClient && NProgress.start();
 	    m.request({
-	      url: config.apiPrefix + 'grabExpose/exposeInfo',
+	      url: config.apiPrefix + 'grabExpose/exposeInfo'
 	    }).then(function(data) {
 	      // scope.data = JSON.parse(data);
 	      scope.data = data;
@@ -2121,209 +2323,6 @@
 	  }
 	};
 
-
-/***/ },
-/* 10 */
-/***/ function(module, exports, __webpack_require__) {
-
-	var Menu = __webpack_require__(7);
-	var Form = __webpack_require__(12);
-	var Post = __webpack_require__(13);
-
-	module.exports = {
-	  view: function(scope) {
-	    var list = scope.data || [];
-	    return (
-	      {tag: "div", attrs: {}, children: [
-	        Menu, {tag: "hr", attrs: {}}, Form, {tag: "hr", attrs: {}}, 
-	        {tag: "div", attrs: {}, children: [
-	          list.map(function(item) {return (
-	          {tag: "div", attrs: {}, children: [
-	            {tag: "h1", attrs: {}, children: [item.title]}, 
-	            {tag: "div", attrs: {}, children: ["author: ", item.author, " ", {tag: "div", attrs: {style:"float: right;"}, children: [
-	              {tag: "a", attrs: {href:"javascript:;", onclick:Post.trigger.bind(Post, 'edit', item)}, children: ["编辑"]}, " |", 
-	              {tag: "a", attrs: {href:"javascript:;", onclick:Post.remove.bind(scope, item.id)}, children: ["删除"]}]}
-	            ]}, 
-	            {tag: "p", attrs: {}, children: [
-	              item.content
-	            ]}
-	          ]}
-	          )})
-	        ]}
-	      ]}
-	    )
-	  },
-
-	  controller: function(params, done) {
-	    var scope = {};
-	    Post.on('list', function() {
-	      Post.list().then(function(data) {
-	        scope.data = data;
-	        done && done(scope);
-	      })
-	    });
-
-	    Post.trigger('list');
-	    return scope;
-	  }
-	};
-
-
-/***/ },
-/* 11 */,
-/* 12 */
-/***/ function(module, exports, __webpack_require__) {
-
-	var Post = __webpack_require__(13);
-
-	module.exports = {
-	  view: function(scope) {
-	    var list = scope.data;
-	    return (
-	      {tag: "div", attrs: {}, children: [
-	        {tag: "div", attrs: {}, children: [{tag: "input", attrs: {type:"hidden", oninput:m.withAttr('value', scope.attr.bind(scope, 'id')), value:scope.contact.id}}, 
-	        {tag: "input", attrs: {style:"width: 100%;", oninput:m.withAttr('value', scope.attr.bind(scope, 'title')), value:scope.contact.title}}]}, 
-	        {tag: "div", attrs: {}, children: [{tag: "textarea", attrs: {style:"width: 100%;", rows:"10", oninput:m.withAttr('value', scope.attr.bind(scope, 'content')), value:scope.contact.content}}]}, 
-	        {tag: "div", attrs: {}, children: [{tag: "button", attrs: {onclick:scope.save}, children: [scope.contact.id ? '保存' : '发表']}]}
-	      ]}
-	    )
-	  },
-
-	  controller: function(params) {
-	    var scope = {
-	      contact: new Post(),
-	      attr: function(prop, value) {
-	        scope.contact[prop] = value;
-	      },
-	      save: function() {
-	        Post.save(scope.contact);
-	        scope.contact = new Post();
-	        Post.trigger('list');
-	      }
-	    };
-
-	    Post.on('edit', function(contact) {
-	      scope.contact = contact;
-	    });
-
-	    return scope;
-	  }
-	};
-
-
-/***/ },
-/* 13 */
-/***/ function(module, exports, __webpack_require__) {
-
-	var config = __webpack_require__(6);
-	var observable = __webpack_require__(14);
-
-	var Post = function(data) {
-	  var data = data || {};
-	  this.id = data.id || '';
-	  this.title = data.title || '';
-	  this.content = data.content || '';
-	  this.author = data.author || 'cheft';
-	};
-
-	Post.list = function() {
-	  return m.request({method: 'GET', url: config.dbPrefix + 'posts'});
-	};
-
-	Post.save = function(data) {
-	  if (data.id) {
-	    return m.request({method: 'PUT', url: config.dbPrefix + 'posts/' + data.id, data: data});
-	  }
-	  return m.request({method: 'POST', url: config.dbPrefix + 'posts', data: data});
-	};
-
-	Post.remove = function(id) {
-	  return m.request({method: 'DELETE', url: config.dbPrefix + 'posts/' + id}).then(Post.trigger.bind(Post, 'list'));
-	};
-
-	module.exports = observable(Post);
-
-
-/***/ },
-/* 14 */
-/***/ function(module, exports) {
-
-	module.exports = function(el) {
-	  el = el || {};
-	  var callbacks = {};
-	  var _id = 0;
-
-	  el.on = function(events, fn) {
-	    if (typeof fn == 'function') {
-	      if (typeof fn.id == 'undefined') {
-	        fn._id = _id++;
-	      }
-
-	      events.replace(/\S+/g, function(name, pos) {
-	        (callbacks[name] = callbacks[name] || []).push(fn);
-	        fn.typed = pos > 0;
-	      });
-	    }
-
-	    return el;
-	  };
-
-	  el.off = function(events, fn) {
-	    if (events == '*') {
-	      callbacks = {};
-	    }else {
-	      events.replace(/\S+/g, function(name) {
-	        if (fn) {
-	          var arr = callbacks[name];
-	          for (var i = 0, cb; (cb = arr && arr[i]); ++i) {
-	            if (cb._id == fn._id) {
-	              arr.splice(i--, 1);
-	            }
-	          }
-	        } else {
-	          callbacks[name] = [];
-	        }
-	      });
-	    }
-
-	    return el;
-	  };
-
-	  // only single event supported
-	  el.one = function(name, fn) {
-	    function on() {
-	      el.off(name, on);
-	      fn.apply(el, arguments);
-	    }
-
-	    return el.on(name, on);
-	  };
-
-	  el.trigger = function(name) {
-	    var args = [].slice.call(arguments, 1);
-	    var fns = callbacks[name] || [];
-
-	    for (var i = 0, fn; (fn = fns[i]); ++i) {
-	      if (!fn.busy) {
-	        fn.busy = 1;
-	        fn.apply(el, fn.typed ? [name].concat(args) : args);
-	        if (fns[i] !== fn) {
-	          i--;
-	        }
-
-	        fn.busy = 0;
-	      }
-	    }
-
-	    if (callbacks.all && name != 'all') {
-	      el.trigger.apply(el, ['all', name].concat(args));
-	    }
-
-	    return el;
-	  };
-
-	  return el;
-	};
 
 /***/ }
 /******/ ]);

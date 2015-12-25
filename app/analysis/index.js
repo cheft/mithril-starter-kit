@@ -12,12 +12,12 @@ module.exports = {
           <thead id="listHeader">
             <tr>
               <th>日期</th>
-              <th><a>新增<i class="iconfont icon-jiantou10"></i></a></th>
-              <th><a>删除<i class="iconfont icon-jiantou10"></i></a></th>
-              <th><a>总刷新<i class="iconfont icon-jiantou10"></i></a></th>
-              <th><a>标签使用<i class="iconfont icon-jiantou10"></i></a></th>
-              <th><a>登陆天数<i class="iconfont icon-jiantou10"></i></a></th>
-              <th><a>日积分<i class="iconfont icon-jiantou10"></i></a></th>
+              <th><a>新增<i></i></a></th>
+              <th><a>删除<i></i></a></th>
+              <th><a>总刷新<i></i></a></th>
+              <th><a>标签使用<i></i></a></th>
+              <th><a>登陆天数<i></i></a></th>
+              <th><a>日积分<i></i></a></th>
             </tr>
           </thead>
           <tbody>

@@ -9,6 +9,7 @@
   "dependencies": {
     "body-parser": "^1.14.2",
     "express": "^4.13.3",
+    "json-server": "^0.8.4",
     "mithril": "^0.2.2-rc.1",
     "mithril-node-render": "^0.4.1",
     "msx": "^0.4.1",

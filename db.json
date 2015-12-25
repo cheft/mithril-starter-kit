@@ -1,31 +1,6 @@
 {
-  "posts": [
-    {
-      "id": 1,
-      "title": "json-server study",
-      "author": "typicode",
-      "content": "Get a full fake REST API with zero coding in less than 30 seconds (seriously)\nCreated with <3 for front-end developers who need a quick back-end for prototyping and mocking.\nEgghead.io free video tutorial - Creating demo APIs with json-server\nJSONPlaceholder - Live running version\nSee also hotel :hotel:, a process manager for web developers."
-    },
-    {
-      "id": 2,
-      "title": "json-server study 22",
-      "author": "typicode2",
-      "content": "Get a full fake REST API with zero coding in less than 30 seconds (seriously)\nCreated with <3 for front-end developers who need a quick back-end for prototyping and mocking.\nEgghead.io free video tutorial - Creating demo APIs with json-server\nJSONPlaceholder - Live running version\nSee also hotel :hotel:, a process manager for web developers."
-    },
-    {
-      "id": 3,
-      "title": "json-server study 33",
-      "author": "typicode3",
-      "content": "Get a full fake REST API with zero coding in less than 30 seconds (seriously)\nCreated with <3 for front-end developers who need a quick back-end for prototyping and mocking.\nEgghead.io free video tutorial - Creating demo APIs with json-server\nJSONPlaceholder - Live running version\nSee also hotel :hotel:, a process manager for web developers."
-    }
-  ],
-  "comments": [
-    {
-      "id": 1,
-      "body": "some comment",
-      "postId": 1
-    }
-  ],
+  "posts": [],
+  "comments": [],
   "profile": {
     "name": "typicode"
   }

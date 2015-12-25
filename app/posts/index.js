@@ -7,7 +7,7 @@ module.exports = {
     var list = scope.data || [];
     return (
       <div>
-        <Menu /><hr /><Form/><hr />
+        <Menu /><hr /><Form /><hr />
         <div>
           {list.map(function(item) {return (
           <div>

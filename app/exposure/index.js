@@ -8,7 +8,7 @@ module.exports = {
     return (
       <div>
         <Menu />
-        <table class="rob-info tc">
+        <table>
           <thead>
             <tr>
               <th style="width:40%;">我的曝光房源</th>
@@ -20,7 +20,7 @@ module.exports = {
           <tbody>
             {list.map(function(item) {return (
             <tr>
-              <td><a class="alink-blue" href={'http://nanning.qfang.com/sale/' + item.roomCommentId} target="_blank"> [{item.gardenName}] {item.bedRoom}室{item.livingRoom}厅 {item.area} m² {item.floor}/{item.totalFloor}层 </a></td>
+              <td><a href={'http://nanning.qfang.com/sale/' + item.roomCommentId} target="_blank"> [{item.gardenName}] {item.bedRoom}室{item.livingRoom}厅 {item.area} m² {item.floor}/{item.totalFloor}层 </a></td>
               <td>{item.showDate} {item.showTime}</td>
               <td>{item.clickCount}</td>
               <td>{item.showDateType}</td>
@@ -36,7 +36,7 @@ module.exports = {
     var scope = {};
     m.isClient && NProgress.start();
     m.request({
-      url: config.apiPrefix + 'grabExpose/exposeInfo',
+      url: config.apiPrefix + 'grabExpose/exposeInfo'
     }).then(function(data) {
       // scope.data = JSON.parse(data);
       scope.data = data;
