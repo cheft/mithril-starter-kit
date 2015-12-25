@@ -1490,11 +1490,13 @@
 /***/ function(module, exports, __webpack_require__) {
 
 	var posts = __webpack_require__(5);
+	var aboutme = __webpack_require__(14);
 	var analysis = __webpack_require__(11);
 	var exposure = __webpack_require__(13);
 
 	module.exports = {
 	  '/': posts,
+	  '/aboutme': aboutme,
 	  '/analysis': analysis,
 	  '/exposure': exposure
 	};
@@ -1504,6 +1506,7 @@
 /* 5 */
 /***/ function(module, exports, __webpack_require__) {
 
+	var NProgress = __webpack_require__(12);
 	var Menu = __webpack_require__(6);
 	var Form = __webpack_require__(7);
 	var Post = __webpack_require__(8);
@@ -1512,7 +1515,7 @@
 	  view: function(scope) {
 	    var list = scope.data || [];
 	    return (
-	      {tag: "div", attrs: {}, children: [
+	      {tag: "div", attrs: {config:scope.renderComplete}, children: [
 	        Menu, {tag: "hr", attrs: {}}, Form, {tag: "hr", attrs: {}}, 
 	        {tag: "div", attrs: {}, children: [
 	          list.map(function(item) {return (
@@ -1533,7 +1536,12 @@
 	  },
 
 	  controller: function(params, done) {
+	    m.isClient && NProgress.start();
 	    var scope = {
+	      renderComplete: function(el, isInit) {
+	        !isInit && m.isClient && NProgress.done();
+	      },
+
 	      remove: function(id) {
 	        Post.remove(id).then(function() {
 	          Post.trigger('fill', new Post());
@@ -1564,6 +1572,7 @@
 	    return (
 	      {tag: "ul", attrs: {}, children: [
 	        {tag: "li", attrs: {}, children: [{tag: "a", attrs: {config:m.route, href:"/"}, children: ["博客"]}]}, 
+	        {tag: "li", attrs: {}, children: [{tag: "a", attrs: {config:m.route, href:"/aboutme"}, children: ["关于我"]}]}, 
 	        {tag: "li", attrs: {}, children: [{tag: "a", attrs: {config:m.route, href:"/exposure"}, children: ["抢曝光"]}]}, 
 	        {tag: "li", attrs: {}, children: [{tag: "a", attrs: {config:m.route, href:"/analysis"}, children: ["我的统计"]}]}
 	      ]}
@@ -2331,6 +2340,43 @@
 	  }
 	};
 
+
+/***/ },
+/* 14 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var config = __webpack_require__(9);
+	var Menu = __webpack_require__(6);
+	var NProgress = __webpack_require__(12);
+
+	module.exports = {
+	  view: function(scope) {
+	    var profile = scope.data;
+	    return (
+	      {tag: "div", attrs: {config:scope.renderComplete}, children: [
+	        Menu, 
+	        {tag: "h1", attrs: {}, children: [profile.name]}, 
+	        {tag: "h3", attrs: {}, children: [profile.email]}
+	      ]}
+	    )
+	  },
+
+	  controller: function(params, done) {
+	    m.isClient && NProgress.start();
+	    var scope = {
+	      renderComplete: function(el, isInit) {
+	        !isInit && m.isClient && NProgress.done();
+	      }
+	    };
+	    m.request({
+	      url: config.dbPrefix + 'profile'
+	    }).then(function(data) {
+	      scope.data = data;
+	      done && done(scope);
+	    });
+	    return scope;
+	  }
+	}
 
 /***/ }
 /******/ ]);
