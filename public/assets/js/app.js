@@ -2136,14 +2136,13 @@
 	      {tag: "div", attrs: {}, children: [
 	        Menu, 
 	        {tag: "hr", attrs: {}}, 
-	        m.component(Form, {list:List}), 
+	        Form, 
 	        List
 	      ]}
 	    )
 	  },
 
 	  controller: function(params) {
-	    console.log(this);
 	  }
 	};
 
@@ -2163,6 +2162,7 @@
 	        {tag: "div", attrs: {}, children: [
 	          {tag: "h1", attrs: {}, children: [item.title()]}, 
 	          {tag: "div", attrs: {}, children: ["author: ", item.author(), " ", {tag: "div", attrs: {style:"float: right;"}, children: [
+	            {tag: "a", attrs: {href:"javascript:;", onclick:Post.trigger.bind(Post, 'edit', item)}, children: ["编辑"]}, " |", 
 	            {tag: "a", attrs: {href:"javascript:;", onclick:Post.remove.bind(scope, item.id())}, children: ["删除"]}]}
 	          ]}, 
 	          {tag: "p", attrs: {}, children: [
@@ -2175,18 +2175,17 @@
 	  },
 
 	  controller: function(params, done) {
-	    var scope = {
+	    var scope = {};
 
-	      fetch: function() {
-	        Post.list().then(function(data) {
-	          scope.data = data;
-	          done && done(scope);
-	        })
-	        return scope;
-	      }
-	    };
+	    Post.on('list', function() {
+	      Post.list().then(function(data) {
+	        scope.data = data;
+	        done && done(scope);
+	      })
+	    });
 
-	    return scope.fetch();
+	    Post.trigger('list');
+	    return scope;
 	  }
 	};
 
@@ -2202,9 +2201,9 @@
 	    var list = scope.data;
 	    return (
 	      {tag: "div", attrs: {}, children: [
-	        {tag: "div", attrs: {}, children: [{tag: "input", attrs: {style:"width: 100%;", oninput:m.withAttr('value', scope.contact.title)}}]}, 
-	        {tag: "div", attrs: {}, children: [{tag: "textarea", attrs: {style:"width: 100%;", rows:"10", oninput:m.withAttr('value', scope.contact.content)}}]}, 
-	        {tag: "div", attrs: {}, children: [{tag: "button", attrs: {onclick:scope.save}, children: ["发表"]}]}
+	        {tag: "div", attrs: {}, children: [{tag: "input", attrs: {type:"hidden", value:scope.contact.id()}}, {tag: "input", attrs: {style:"width: 100%;", oninput:m.withAttr('value', scope.contact.title), value:scope.contact.title()}}]}, 
+	        {tag: "div", attrs: {}, children: [{tag: "textarea", attrs: {style:"width: 100%;", rows:"10", oninput:m.withAttr('value', scope.contact.content)}, children: [scope.contact.content()]}]}, 
+	        {tag: "div", attrs: {}, children: [{tag: "button", attrs: {onclick:scope.save}, children: [scope.contact.id() ? '保存' : '发表']}]}
 	      ]}
 	    )
 	  },
@@ -2212,12 +2211,17 @@
 	  controller: function(params) {
 	    var scope = {
 	      contact: new Post(),
-
 	      save: function() {
-	        Post.save(scope.contact).then(function(data) {
-	        })
+	        Post.save(scope.contact);
+	        scope.contact = new Post();
+	        Post.trigger('list');
 	      }
 	    };
+
+	    Post.on('edit', function(contact) {
+	      scope.contact = contact;
+	    });
+
 	    return scope;
 	  }
 	};
@@ -2228,6 +2232,7 @@
 /***/ function(module, exports, __webpack_require__) {
 
 	var config = __webpack_require__(6);
+	var observable = __webpack_require__(14);
 
 	var Post = function(data) {
 	  var data = data || {};
@@ -2237,28 +2242,108 @@
 	  this.author = m.prop(data.author || 'cheft');
 	};
 
-	Post.list = function(data) {
+	Post.list = function() {
 	  return m.request({method: 'GET', url: config.dbPrefix + 'posts', type: Post});
 	};
 
 	Post.save = function(data) {
+	  if (data.id()) {
+	    return m.request({method: 'PUT', url: config.dbPrefix + 'posts/' + data.id(), data: data});
+	  }
 	  return m.request({method: 'POST', url: config.dbPrefix + 'posts', data: data});
 	};
 
 	Post.remove = function(id) {
-	  return m.request({method: 'DELETE', url: config.dbPrefix + 'posts/' + id});
+	  return m.request({method: 'DELETE', url: config.dbPrefix + 'posts/' + id}).then(Post.trigger.bind(Post, 'list'));
 	};
 
 	Post.get = function(id) {
 	  return m.request({method: 'GET', url: config.dbPrefix + 'posts/' + id, type: Post});
 	};
 
-	Post.update = function(data) {
-	  return m.request({method: 'PUT', url: config.dbPrefix + 'posts/' + data.id, data: data});
+	module.exports = observable(Post);
+
+
+/***/ },
+/* 14 */
+/***/ function(module, exports) {
+
+	module.exports = function(el) {
+	  el = el || {};
+	  var callbacks = {};
+	  var _id = 0;
+
+	  el.on = function(events, fn) {
+	    if (typeof fn == 'function') {
+	      if (typeof fn.id == 'undefined') {
+	        fn._id = _id++;
+	      }
+
+	      events.replace(/\S+/g, function(name, pos) {
+	        (callbacks[name] = callbacks[name] || []).push(fn);
+	        fn.typed = pos > 0;
+	      });
+	    }
+
+	    return el;
+	  };
+
+	  el.off = function(events, fn) {
+	    if (events == '*') {
+	      callbacks = {};
+	    }else {
+	      events.replace(/\S+/g, function(name) {
+	        if (fn) {
+	          var arr = callbacks[name];
+	          for (var i = 0, cb; (cb = arr && arr[i]); ++i) {
+	            if (cb._id == fn._id) {
+	              arr.splice(i--, 1);
+	            }
+	          }
+	        } else {
+	          callbacks[name] = [];
+	        }
+	      });
+	    }
+
+	    return el;
+	  };
+
+	  // only single event supported
+	  el.one = function(name, fn) {
+	    function on() {
+	      el.off(name, on);
+	      fn.apply(el, arguments);
+	    }
+
+	    return el.on(name, on);
+	  };
+
+	  el.trigger = function(name) {
+	    var args = [].slice.call(arguments, 1);
+	    var fns = callbacks[name] || [];
+
+	    for (var i = 0, fn; (fn = fns[i]); ++i) {
+	      if (!fn.busy) {
+	        fn.busy = 1;
+	        fn.apply(el, fn.typed ? [name].concat(args) : args);
+	        if (fns[i] !== fn) {
+	          i--;
+	        }
+
+	        fn.busy = 0;
+	      }
+	    }
+
+	    if (callbacks.all && name != 'all') {
+	      el.trigger.apply(el, ['all', name].concat(args));
+	    }
+
+	    return el;
+	  };
+
+	  return el;
 	};
-
-	module.exports = Post;
-
 
 /***/ }
 /******/ ]);

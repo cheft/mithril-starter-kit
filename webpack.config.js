@@ -42,6 +42,6 @@ module.exports = {
     }]
   },
   resolve: {
-    modulesDirectories: ['node_modules', 'app', 'assets']
+    modulesDirectories: ['node_modules']
   }
 };

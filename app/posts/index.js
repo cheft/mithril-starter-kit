@@ -8,13 +8,12 @@ module.exports = {
       <div>
         <Menu />
         <hr />
-        <Form list={List}/>
+        <Form/>
         <List />
       </div>
     )
   },
 
   controller: function(params) {
-    console.log(this);
   }
 };
