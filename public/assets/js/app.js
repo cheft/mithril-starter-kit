@@ -1568,7 +1568,9 @@
 	         * IE 中，m.trust(item.html) 经常脚本无响应, 此方式的 innerHTML 亦无效
 	         * 所以使用 outerHTML， 但 .content 里面的 div 是会替换掉的
 	         */
-	        vdom.nodes[0].outerHTML = vdom.attrs.html;
+	        if (!isInit) {
+	          vdom.nodes[0].outerHTML = vdom.attrs.html;
+	        }
 	      },
 
 	      remove: function(id) {
