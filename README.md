@@ -1,10 +1,10 @@
 mithril-starter-kit
 ===================
 
-    modify app/config.js your computer ip
+    modify your local IP in app/config.js
 
     npm install
 
     npm start
 
-> http://[computer ip]:3000
+> http://[local IP]:3000
