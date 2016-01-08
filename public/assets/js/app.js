@@ -1490,9 +1490,9 @@
 /***/ function(module, exports, __webpack_require__) {
 
 	var posts = __webpack_require__(5);
-	var aboutme = __webpack_require__(14);
-	var analysis = __webpack_require__(11);
-	var exposure = __webpack_require__(13);
+	var aboutme = __webpack_require__(12);
+	var analysis = __webpack_require__(13);
+	var exposure = __webpack_require__(14);
 
 	module.exports = {
 	  '/': posts,
@@ -1506,10 +1506,10 @@
 /* 5 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var NProgress = __webpack_require__(12);
-	var Menu = __webpack_require__(6);
-	var Form = __webpack_require__(7);
-	var Post = __webpack_require__(8);
+	var NProgress = __webpack_require__(6);
+	var Menu = __webpack_require__(7);
+	var Form = __webpack_require__(8);
+	var Post = __webpack_require__(9);
 
 	module.exports = {
 	  view: function(scope) {
@@ -1573,248 +1573,6 @@
 
 /***/ },
 /* 6 */
-/***/ function(module, exports) {
-
-	module.exports = {
-	  view: function(scope) {
-	    return (
-	      {tag: "ul", attrs: {}, children: [
-	        {tag: "li", attrs: {}, children: [{tag: "a", attrs: {config:m.route, href:"/"}, children: ["博客"]}]}, 
-	        {tag: "li", attrs: {}, children: [{tag: "a", attrs: {config:m.route, href:"/aboutme"}, children: ["关于我"]}]}, 
-	        {tag: "li", attrs: {}, children: [{tag: "a", attrs: {config:m.route, href:"/exposure"}, children: ["抢曝光"]}]}, 
-	        {tag: "li", attrs: {}, children: [{tag: "a", attrs: {config:m.route, href:"/analysis"}, children: ["我的统计"]}]}
-	      ]}
-	    )
-	  }
-	};
-
-
-/***/ },
-/* 7 */
-/***/ function(module, exports, __webpack_require__) {
-
-	var Post = __webpack_require__(8);
-
-	module.exports = {
-	  view: function(scope) {
-	    var list = scope.data;
-	    return (
-	      {tag: "div", attrs: {}, children: [
-	        {tag: "div", attrs: {}, children: [{tag: "input", attrs: {type:"hidden", value:scope.contact.id}}, 
-	        {tag: "input", attrs: {style:"width: 100%;", onkeyup:m.withAttr('value', scope.attr.bind(scope, 'title')), value:scope.contact.title}}]}, 
-	        {tag: "div", attrs: {}, children: [{tag: "textarea", attrs: {style:"width: 100%;", rows:"10", onkeyup:m.withAttr('value', scope.attr.bind(scope, 'content')), value:scope.contact.content}}]}, 
-	        {tag: "div", attrs: {}, children: [{tag: "button", attrs: {onclick:scope.save}, children: [scope.contact.id ? '保存' : '发表']}]}
-	      ]}
-	    )
-	  },
-
-	  controller: function(params) {
-	    var scope = {
-	      contact: new Post(),
-	      attr: function(prop, value) {
-	        scope.contact[prop] = value;
-	      },
-	      save: function() {
-	        Post.save(scope.contact);
-	        Post.trigger('fill', new Post());
-	        Post.trigger('list');
-	      }
-	    };
-
-	    Post.on('fill', function(contact) {
-	      scope.contact = contact;
-	    });
-
-	    return scope;
-	  }
-	};
-
-
-/***/ },
-/* 8 */
-/***/ function(module, exports, __webpack_require__) {
-
-	var config = __webpack_require__(9);
-	var observable = __webpack_require__(10);
-
-	var Post = function(data) {
-	  var data = data || {};
-	  this.id = data.id || '';
-	  this.title = data.title || '';
-	  this.content = data.content || '';
-	  this.author = data.author || 'cheft';
-	};
-
-	Post.list = function() {
-	  return m.request({method: 'GET', url: config.dbPrefix + 'posts'});
-	};
-
-	Post.save = function(data) {
-	  if (data.id) {
-	    return m.request({method: 'PUT', url: config.dbPrefix + 'posts/' + data.id, data: data});
-	  }
-	  return m.request({method: 'POST', url: config.dbPrefix + 'posts', data: data});
-	};
-
-	Post.remove = function(id) {
-	  return m.request({method: 'DELETE', url: config.dbPrefix + 'posts/' + id});
-	};
-
-	module.exports = observable(Post);
-
-
-/***/ },
-/* 9 */
-/***/ function(module, exports) {
-
-	module.exports = {
-	  apiPrefix: 'http://shanghai.qfang.com/brokerweb/',
-	  dbPrefix: 'http://172.16.0.135:3000/api/'
-	};
-
-
-/***/ },
-/* 10 */
-/***/ function(module, exports) {
-
-	module.exports = function(el) {
-	  el = el || {};
-	  var callbacks = {};
-	  var _id = 0;
-
-	  el.on = function(events, fn) {
-	    if (typeof fn == 'function') {
-	      if (typeof fn.id == 'undefined') {
-	        fn._id = _id++;
-	      }
-
-	      events.replace(/\S+/g, function(name, pos) {
-	        (callbacks[name] = callbacks[name] || []).push(fn);
-	        fn.typed = pos > 0;
-	      });
-	    }
-
-	    return el;
-	  };
-
-	  el.off = function(events, fn) {
-	    if (events == '*') {
-	      callbacks = {};
-	    }else {
-	      events.replace(/\S+/g, function(name) {
-	        if (fn) {
-	          var arr = callbacks[name];
-	          for (var i = 0, cb; (cb = arr && arr[i]); ++i) {
-	            if (cb._id == fn._id) {
-	              arr.splice(i--, 1);
-	            }
-	          }
-	        } else {
-	          callbacks[name] = [];
-	        }
-	      });
-	    }
-
-	    return el;
-	  };
-
-	  // only single event supported
-	  el.one = function(name, fn) {
-	    function on() {
-	      el.off(name, on);
-	      fn.apply(el, arguments);
-	    }
-
-	    return el.on(name, on);
-	  };
-
-	  el.trigger = function(name) {
-	    var args = [].slice.call(arguments, 1);
-	    var fns = callbacks[name] || [];
-
-	    for (var i = 0, fn; (fn = fns[i]); ++i) {
-	      if (!fn.busy) {
-	        fn.busy = 1;
-	        fn.apply(el, fn.typed ? [name].concat(args) : args);
-	        if (fns[i] !== fn) {
-	          i--;
-	        }
-
-	        fn.busy = 0;
-	      }
-	    }
-
-	    if (callbacks.all && name != 'all') {
-	      el.trigger.apply(el, ['all', name].concat(args));
-	    }
-
-	    return el;
-	  };
-
-	  return el;
-	};
-
-/***/ },
-/* 11 */
-/***/ function(module, exports, __webpack_require__) {
-
-	var config = __webpack_require__(9);
-	var Menu = __webpack_require__(6);
-	var NProgress = __webpack_require__(12);
-
-	module.exports = {
-	  view: function(scope) {
-	    var list = scope.data.result;
-	    return (
-	      {tag: "div", attrs: {}, children: [
-	        Menu, 
-	        {tag: "table", attrs: {}, children: [
-	          {tag: "thead", attrs: {id:"listHeader"}, children: [
-	            {tag: "tr", attrs: {}, children: [
-	              {tag: "th", attrs: {}, children: ["日期"]}, 
-	              {tag: "th", attrs: {}, children: [{tag: "a", attrs: {}, children: ["新增", {tag: "i", attrs: {}}]}]}, 
-	              {tag: "th", attrs: {}, children: [{tag: "a", attrs: {}, children: ["删除", {tag: "i", attrs: {}}]}]}, 
-	              {tag: "th", attrs: {}, children: [{tag: "a", attrs: {}, children: ["总刷新", {tag: "i", attrs: {}}]}]}, 
-	              {tag: "th", attrs: {}, children: [{tag: "a", attrs: {}, children: ["标签使用", {tag: "i", attrs: {}}]}]}, 
-	              {tag: "th", attrs: {}, children: [{tag: "a", attrs: {}, children: ["登陆天数", {tag: "i", attrs: {}}]}]}, 
-	              {tag: "th", attrs: {}, children: [{tag: "a", attrs: {}, children: ["日积分", {tag: "i", attrs: {}}]}]}
-	            ]}
-	          ]}, 
-	          {tag: "tbody", attrs: {}, children: [
-	            list.map(function(item) {return (
-	            {tag: "tr", attrs: {}, children: [
-	              {tag: "td", attrs: {}, children: [item.dataDate]}, 
-	              {tag: "td", attrs: {}, children: [item.addRoomCount]}, 
-	              {tag: "td", attrs: {}, children: [item.delRoomCount]}, 
-	              {tag: "td", attrs: {}, children: [item.useRefurbishCount]}, 
-	              {tag: "td", attrs: {}, children: [item.useLabelCount]}, 
-	              {tag: "td", attrs: {}, children: [item.loginCount]}, 
-	              {tag: "td", attrs: {}, children: [item.integralCount]}
-	            ]}
-	            )})
-	          ]}
-	        ]}
-	      ]}
-	    )
-	  },
-
-	  controller: function(params, done) {
-	    var scope = {};
-	    !m.isServer && NProgress.start();
-	    m.request({
-	      url: config.apiPrefix + 'userCenter/query/statistical'
-	    }).then(function(data) {
-	      // scope.data = JSON.parse(data);
-	      scope.data = data;
-	      done && done(scope);
-	      !m.isServer && NProgress.done();
-	    });
-	    return scope;
-	  }
-	}
-
-/***/ },
-/* 12 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_RESULT__;/* NProgress, (c) 2013, 2014 Rico Sta. Cruz - http://ricostacruz.com/nprogress
@@ -2296,12 +2054,297 @@
 
 
 /***/ },
+/* 7 */
+/***/ function(module, exports) {
+
+	module.exports = {
+	  view: function(scope) {
+	    return (
+	      {tag: "ul", attrs: {}, children: [
+	        {tag: "li", attrs: {}, children: [{tag: "a", attrs: {config:m.route, href:"/"}, children: ["博客"]}]}, 
+	        {tag: "li", attrs: {}, children: [{tag: "a", attrs: {config:m.route, href:"/aboutme"}, children: ["关于"]}]}, 
+	        {tag: "li", attrs: {style:"display: none;"}, children: [{tag: "a", attrs: {config:m.route, href:"/exposure"}, children: ["抢曝光"]}]}, 
+	        {tag: "li", attrs: {style:"display: none;"}, children: [{tag: "a", attrs: {config:m.route, href:"/analysis"}, children: ["我的统计"]}]}
+	      ]}
+	    )
+	  }
+	};
+
+
+/***/ },
+/* 8 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var Post = __webpack_require__(9);
+
+	module.exports = {
+	  view: function(scope) {
+	    var list = scope.data;
+	    return (
+	      {tag: "div", attrs: {}, children: [
+	        {tag: "div", attrs: {}, children: [{tag: "input", attrs: {type:"hidden", value:scope.contact.id}}, 
+	        {tag: "input", attrs: {style:"width: 100%;", onkeyup:m.withAttr('value', scope.attr.bind(scope, 'title')), value:scope.contact.title}}]}, 
+	        {tag: "div", attrs: {}, children: [{tag: "textarea", attrs: {style:"width: 100%;", rows:"10", onkeyup:m.withAttr('value', scope.attr.bind(scope, 'content')), value:scope.contact.content}}]}, 
+	        {tag: "div", attrs: {}, children: [{tag: "button", attrs: {onclick:scope.save}, children: [scope.contact.id ? '保存' : '发表']}]}
+	      ]}
+	    )
+	  },
+
+	  controller: function(params) {
+	    var scope = {
+	      contact: new Post(),
+	      attr: function(prop, value) {
+	        scope.contact[prop] = value;
+	      },
+	      save: function() {
+	        Post.save(scope.contact);
+	        Post.trigger('fill', new Post());
+	        Post.trigger('list');
+	      }
+	    };
+
+	    Post.on('fill', function(contact) {
+	      scope.contact = contact;
+	    });
+
+	    return scope;
+	  }
+	};
+
+
+/***/ },
+/* 9 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var config = __webpack_require__(10);
+	var observable = __webpack_require__(11);
+
+	var Post = function(data) {
+	  var data = data || {};
+	  this.id = data.id || '';
+	  this.title = data.title || '';
+	  this.content = data.content || '';
+	  this.author = data.author || 'cheft';
+	};
+
+	Post.list = function() {
+	  return m.request({method: 'GET', url: config.dbPrefix + 'posts'});
+	};
+
+	Post.save = function(data) {
+	  if (data.id) {
+	    return m.request({method: 'PUT', url: config.dbPrefix + 'posts/' + data.id, data: data});
+	  }
+	  return m.request({method: 'POST', url: config.dbPrefix + 'posts', data: data});
+	};
+
+	Post.remove = function(id) {
+	  return m.request({method: 'DELETE', url: config.dbPrefix + 'posts/' + id});
+	};
+
+	module.exports = observable(Post);
+
+
+/***/ },
+/* 10 */
+/***/ function(module, exports) {
+
+	module.exports = {
+	  dbPrefix: 'http://172.16.0.135:3000/api/',
+
+	  // :TODO
+	  apiPrefix: 'http://shanghai.qfang.com/brokerweb/',
+	};
+
+
+/***/ },
+/* 11 */
+/***/ function(module, exports) {
+
+	module.exports = function(el) {
+	  el = el || {};
+	  var callbacks = {};
+	  var _id = 0;
+
+	  el.on = function(events, fn) {
+	    if (typeof fn == 'function') {
+	      if (typeof fn.id == 'undefined') {
+	        fn._id = _id++;
+	      }
+
+	      events.replace(/\S+/g, function(name, pos) {
+	        (callbacks[name] = callbacks[name] || []).push(fn);
+	        fn.typed = pos > 0;
+	      });
+	    }
+
+	    return el;
+	  };
+
+	  el.off = function(events, fn) {
+	    if (events == '*') {
+	      callbacks = {};
+	    }else {
+	      events.replace(/\S+/g, function(name) {
+	        if (fn) {
+	          var arr = callbacks[name];
+	          for (var i = 0, cb; (cb = arr && arr[i]); ++i) {
+	            if (cb._id == fn._id) {
+	              arr.splice(i--, 1);
+	            }
+	          }
+	        } else {
+	          callbacks[name] = [];
+	        }
+	      });
+	    }
+
+	    return el;
+	  };
+
+	  // only single event supported
+	  el.one = function(name, fn) {
+	    function on() {
+	      el.off(name, on);
+	      fn.apply(el, arguments);
+	    }
+
+	    return el.on(name, on);
+	  };
+
+	  el.trigger = function(name) {
+	    var args = [].slice.call(arguments, 1);
+	    var fns = callbacks[name] || [];
+
+	    for (var i = 0, fn; (fn = fns[i]); ++i) {
+	      if (!fn.busy) {
+	        fn.busy = 1;
+	        fn.apply(el, fn.typed ? [name].concat(args) : args);
+	        if (fns[i] !== fn) {
+	          i--;
+	        }
+
+	        fn.busy = 0;
+	      }
+	    }
+
+	    if (callbacks.all && name != 'all') {
+	      el.trigger.apply(el, ['all', name].concat(args));
+	    }
+
+	    return el;
+	  };
+
+	  return el;
+	};
+
+/***/ },
+/* 12 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var config = __webpack_require__(10);
+	var Menu = __webpack_require__(7);
+	var NProgress = __webpack_require__(6);
+
+	module.exports = {
+	  view: function(scope) {
+	    var profile = scope.data;
+	    return (
+	      {tag: "div", attrs: {config:scope.renderComplete}, children: [
+	        Menu, 
+	        {tag: "h1", attrs: {}, children: [profile.name]}, 
+	        {tag: "h3", attrs: {}, children: [profile.email]}
+	      ]}
+	    )
+	  },
+
+	  controller: function(params, done) {
+	    if (m.isClient) {
+	      document.title = '关于我';
+	      NProgress.start();
+	    }
+
+	    var scope = {
+	      renderComplete: function(el, isInit) {
+	        !isInit && m.isClient && NProgress.done();
+	      }
+	    };
+	    m.request({
+	      url: config.dbPrefix + 'profile'
+	    }).then(function(data) {
+	      scope.data = data;
+	      done && done(scope);
+	    });
+	    return scope;
+	  }
+	}
+
+/***/ },
 /* 13 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var config = __webpack_require__(9);
-	var Menu = __webpack_require__(6);
-	var NProgress = __webpack_require__(12);
+	var config = __webpack_require__(10);
+	var Menu = __webpack_require__(7);
+	var NProgress = __webpack_require__(6);
+
+	module.exports = {
+	  view: function(scope) {
+	    var list = scope.data.result;
+	    return (
+	      {tag: "div", attrs: {}, children: [
+	        Menu, 
+	        {tag: "table", attrs: {}, children: [
+	          {tag: "thead", attrs: {id:"listHeader"}, children: [
+	            {tag: "tr", attrs: {}, children: [
+	              {tag: "th", attrs: {}, children: ["日期"]}, 
+	              {tag: "th", attrs: {}, children: [{tag: "a", attrs: {}, children: ["新增", {tag: "i", attrs: {}}]}]}, 
+	              {tag: "th", attrs: {}, children: [{tag: "a", attrs: {}, children: ["删除", {tag: "i", attrs: {}}]}]}, 
+	              {tag: "th", attrs: {}, children: [{tag: "a", attrs: {}, children: ["总刷新", {tag: "i", attrs: {}}]}]}, 
+	              {tag: "th", attrs: {}, children: [{tag: "a", attrs: {}, children: ["标签使用", {tag: "i", attrs: {}}]}]}, 
+	              {tag: "th", attrs: {}, children: [{tag: "a", attrs: {}, children: ["登陆天数", {tag: "i", attrs: {}}]}]}, 
+	              {tag: "th", attrs: {}, children: [{tag: "a", attrs: {}, children: ["日积分", {tag: "i", attrs: {}}]}]}
+	            ]}
+	          ]}, 
+	          {tag: "tbody", attrs: {}, children: [
+	            list.map(function(item) {return (
+	            {tag: "tr", attrs: {}, children: [
+	              {tag: "td", attrs: {}, children: [item.dataDate]}, 
+	              {tag: "td", attrs: {}, children: [item.addRoomCount]}, 
+	              {tag: "td", attrs: {}, children: [item.delRoomCount]}, 
+	              {tag: "td", attrs: {}, children: [item.useRefurbishCount]}, 
+	              {tag: "td", attrs: {}, children: [item.useLabelCount]}, 
+	              {tag: "td", attrs: {}, children: [item.loginCount]}, 
+	              {tag: "td", attrs: {}, children: [item.integralCount]}
+	            ]}
+	            )})
+	          ]}
+	        ]}
+	      ]}
+	    )
+	  },
+
+	  controller: function(params, done) {
+	    var scope = {};
+	    !m.isServer && NProgress.start();
+	    m.request({
+	      url: config.apiPrefix + 'userCenter/query/statistical'
+	    }).then(function(data) {
+	      // scope.data = JSON.parse(data);
+	      scope.data = data;
+	      done && done(scope);
+	      !m.isServer && NProgress.done();
+	    });
+	    return scope;
+	  }
+	}
+
+/***/ },
+/* 14 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var config = __webpack_require__(10);
+	var Menu = __webpack_require__(7);
+	var NProgress = __webpack_require__(6);
 
 	module.exports = {
 	  view: function(scope) {
@@ -2348,47 +2391,6 @@
 	  }
 	};
 
-
-/***/ },
-/* 14 */
-/***/ function(module, exports, __webpack_require__) {
-
-	var config = __webpack_require__(9);
-	var Menu = __webpack_require__(6);
-	var NProgress = __webpack_require__(12);
-
-	module.exports = {
-	  view: function(scope) {
-	    var profile = scope.data;
-	    return (
-	      {tag: "div", attrs: {config:scope.renderComplete}, children: [
-	        Menu, 
-	        {tag: "h1", attrs: {}, children: [profile.name]}, 
-	        {tag: "h3", attrs: {}, children: [profile.email]}
-	      ]}
-	    )
-	  },
-
-	  controller: function(params, done) {
-	    if (m.isClient) {
-	      document.title = '关于我';
-	      NProgress.start();
-	    }
-
-	    var scope = {
-	      renderComplete: function(el, isInit) {
-	        !isInit && m.isClient && NProgress.done();
-	      }
-	    };
-	    m.request({
-	      url: config.dbPrefix + 'profile'
-	    }).then(function(data) {
-	      scope.data = data;
-	      done && done(scope);
-	    });
-	    return scope;
-	  }
-	}
 
 /***/ }
 /******/ ]);
