@@ -18,7 +18,7 @@ module.exports = {
               <a href="javascript:;" onclick={scope.remove.bind(scope, item.id)}>删除</a></div>
             </div>
             <p className="content">
-              {item.content}
+              {m.trust(item.html)}
             </p>
           </div>
           )})}
