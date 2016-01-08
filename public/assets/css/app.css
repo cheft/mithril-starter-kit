@@ -31,6 +31,10 @@ input, textarea {
   width: 99%;
 }
 
+input {
+  height: 35px;
+}
+
 button {
   background: #b12d2b;
   border: 1px solid #777;

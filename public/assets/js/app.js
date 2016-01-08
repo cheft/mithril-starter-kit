@@ -61,6 +61,17 @@
 	  m.route(document.body, '/', routes);
 	};
 
+	m.isModern = function() {
+	  var regStr_ie = /msie [\d.]+;/gi ;
+	  if(navigator.userAgent.indexOf("msie") > 0) {
+	    if (navigator.userAgent.match(regStr_ie) > 9) {
+	      return true;
+	    }
+	    return false;
+	  }
+	  return true;
+	}
+
 
 /***/ },
 /* 2 */
@@ -2084,7 +2095,7 @@
 	      {tag: "div", attrs: {}, children: [
 	        {tag: "div", attrs: {}, children: [{tag: "input", attrs: {type:"hidden", value:scope.contact.id}}, 
 	        {tag: "input", attrs: {onkeyup:m.withAttr('value', scope.attr.bind(scope, 'title')), value:scope.contact.title, placeholder:"文章标题"}}]}, 
-	        {tag: "div", attrs: {}, children: [{tag: "textarea", attrs: {rows:"6", onkeyup:m.withAttr('value', scope.attr.bind(scope, 'content')), value:scope.contact.content, placeholder:"文章标题，支持 Markdown"}}]}, 
+	        {tag: "div", attrs: {}, children: [{tag: "textarea", attrs: {rows:"6", onkeyup:m.withAttr('value', scope.attr.bind(scope, 'content')), value:scope.contact.content, placeholder:"文章内容，支持 Markdown"}}]}, 
 	        {tag: "div", attrs: {}, children: [{tag: "button", attrs: {onclick:scope.save}, children: [scope.contact.id ? '保存' : '发表']}]}
 	      ]}
 	    )
@@ -2097,7 +2108,6 @@
 	        scope.contact[prop] = value;
 	      },
 	      save: function() {
-	        console.log(scope.contact);
 	        Post.save(scope.contact);
 	        Post.trigger('fill', new Post());
 	        Post.trigger('list');
