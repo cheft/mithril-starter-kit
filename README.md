@@ -1,5 +1,7 @@
 mithril-starter-kit
 ===================
+    
+    npm install
 
     node server
 
