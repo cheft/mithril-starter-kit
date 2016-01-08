@@ -1,5 +1,7 @@
 html, body {
   padding: 10px;
+  max-width: 960px;
+  margin: auto;
 }
 
 ul.menu {
@@ -37,20 +39,12 @@ input {
 
 button {
   background: #b12d2b;
-  border: 1px solid #777;
-  border-color: rgba(0,0,0,.2);
-  border-bottom-color: #333;
-  border-bottom-color: rgba(0,0,0,.4);
+  border: 1px solid #b12d2b;
   color: #fff;
-  cursor: pointer;
   display: inline-block;
-  padding: 6px 10px;
+  padding: 6px 20px;
   text-align: center;
-  text-decoration: none;
-  text-shadow: 0 1px 0 rgba(0,0,0,.5);
-  user-select: none;
-  position: relative;
-  border-radius: .3em;
+  border-radius: 4px;
 }
 
 .title {
