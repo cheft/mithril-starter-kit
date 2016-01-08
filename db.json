@@ -1,9 +1,15 @@
 {
   "posts": [
     {
-      "id": 1,
-      "title": "学习 mithril.js",
-      "content": "学习 mithril.js",
+      "id": 2,
+      "title": "What is Mithril?",
+      "content": "Mithril is a client-side Javascript MVC framework, i.e. it's a tool to make application code divided into a data layer (called Model), a UI layer (called View), and a glue layer (called Controller)\n\nMithril is around 7kb gzipped thanks to its small, focused, API. It provides a templating engine with a virtual DOM diff implementation for performant rendering, utilities for high-level modelling via functional composition, as well as support for routing and componentization.\n\nThe goal of the framework is to make application code discoverable, readable and maintainable, and hopefully help you become an even better developer.\n\nUnlike some frameworks, Mithril tries very hard to avoid locking you into a web of dependencies: you can use as little of the framework as you need.\n\nHowever, using its entire toolset idiomatically can bring lots of benefits: learning to use functional programming in real world scenarios and solidifying good coding practices for OOP and MVC are just some of them.",
+      "author": "cheft"
+    },
+    {
+      "id": 3,
+      "title": "Mithril 是什么？",
+      "content": "Mithril 是一个客户端 javascript MVC 框架，即它是一个工具，使应用程序代码分为数据层(Model)， UI 层(View)，黏合层(Controller)。\n\nMithril 通过 gzip 压缩后，仅有 12kb 左右，这要归功于 small, focused, API。它提供了一个模板引擎与一个虚拟 DOM diff 实现高性能渲染，还提供了其它高级工具，以及支持路由和组件化。\n\n框架的目标是使应用程序代码更容易组织，可读和可维护，帮助你成为一个更好的开发者。\n\n不像某些框架，Mithril 努力避免将您锁定到某个 web 框架上：您可以尽量少地使用您所需要的框架。\n\n然而，使用其整个工具库可以带来很多好处：学习使用函数式编程和巩固良好的编码实践，OOP 和 MVC 只是其中的一些。",
       "author": "cheft"
     }
   ],

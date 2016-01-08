@@ -8,8 +8,8 @@ module.exports = {
     return (
       <div config={scope.renderComplete}>
         <Menu />
-        <h1>{profile.name}</h1>
-        <h3>{profile.email}</h3>
+        <div className="status">{profile.name}</div>
+        <h3 className="content">{profile.email}</h3>
       </div>
     )
   },

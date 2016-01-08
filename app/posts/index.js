@@ -8,16 +8,16 @@ module.exports = {
     var list = scope.data || [];
     return (
       <div config={scope.renderComplete}>
-        <Menu /><hr /><Form /><hr />
+        <Menu /><Form />
         <div>
           {list.map(function(item) {return (
           <div>
-            <h1>{item.title}</h1>
-            <div>author: {item.author} <div style="float: right;">
+            <h1 className="title">{item.title}</h1>
+            <div className="status">author: {item.author} <div style="float: right;">
               <a href="javascript:;" onclick={Post.trigger.bind(Post, 'fill', item)}>编辑</a> |
               <a href="javascript:;" onclick={scope.remove.bind(scope, item.id)}>删除</a></div>
             </div>
-            <p>
+            <p className="content">
               {item.content}
             </p>
           </div>

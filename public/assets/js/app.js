@@ -1516,16 +1516,16 @@
 	    var list = scope.data || [];
 	    return (
 	      {tag: "div", attrs: {config:scope.renderComplete}, children: [
-	        Menu, {tag: "hr", attrs: {}}, Form, {tag: "hr", attrs: {}}, 
+	        Menu, Form, 
 	        {tag: "div", attrs: {}, children: [
 	          list.map(function(item) {return (
 	          {tag: "div", attrs: {}, children: [
-	            {tag: "h1", attrs: {}, children: [item.title]}, 
-	            {tag: "div", attrs: {}, children: ["author: ", item.author, " ", {tag: "div", attrs: {style:"float: right;"}, children: [
+	            {tag: "h1", attrs: {className:"title"}, children: [item.title]}, 
+	            {tag: "div", attrs: {className:"status"}, children: ["author: ", item.author, " ", {tag: "div", attrs: {style:"float: right;"}, children: [
 	              {tag: "a", attrs: {href:"javascript:;", onclick:Post.trigger.bind(Post, 'fill', item)}, children: ["编辑"]}, " |", 
 	              {tag: "a", attrs: {href:"javascript:;", onclick:scope.remove.bind(scope, item.id)}, children: ["删除"]}]}
 	            ]}, 
-	            {tag: "p", attrs: {}, children: [
+	            {tag: "p", attrs: {className:"content"}, children: [
 	              item.content
 	            ]}
 	          ]}
@@ -2060,9 +2060,9 @@
 	module.exports = {
 	  view: function(scope) {
 	    return (
-	      {tag: "ul", attrs: {}, children: [
-	        {tag: "li", attrs: {}, children: [{tag: "a", attrs: {config:m.route, href:"/"}, children: ["博客"]}]}, 
-	        {tag: "li", attrs: {}, children: [{tag: "a", attrs: {config:m.route, href:"/aboutme"}, children: ["关于"]}]}, 
+	      {tag: "ul", attrs: {className:"menu clearfix"}, children: [
+	        {tag: "li", attrs: {}, children: [{tag: "a", attrs: {config:m.route, href:"/"}, children: ["我的博客"]}]}, 
+	        {tag: "li", attrs: {}, children: [{tag: "a", attrs: {config:m.route, href:"/aboutme"}, children: ["关于我"]}]}, 
 	        {tag: "li", attrs: {style:"display: none;"}, children: [{tag: "a", attrs: {config:m.route, href:"/exposure"}, children: ["抢曝光"]}]}, 
 	        {tag: "li", attrs: {style:"display: none;"}, children: [{tag: "a", attrs: {config:m.route, href:"/analysis"}, children: ["我的统计"]}]}
 	      ]}
@@ -2083,8 +2083,8 @@
 	    return (
 	      {tag: "div", attrs: {}, children: [
 	        {tag: "div", attrs: {}, children: [{tag: "input", attrs: {type:"hidden", value:scope.contact.id}}, 
-	        {tag: "input", attrs: {style:"width: 100%;", onkeyup:m.withAttr('value', scope.attr.bind(scope, 'title')), value:scope.contact.title}}]}, 
-	        {tag: "div", attrs: {}, children: [{tag: "textarea", attrs: {style:"width: 100%;", rows:"10", onkeyup:m.withAttr('value', scope.attr.bind(scope, 'content')), value:scope.contact.content}}]}, 
+	        {tag: "input", attrs: {onkeyup:m.withAttr('value', scope.attr.bind(scope, 'title')), value:scope.contact.title}}]}, 
+	        {tag: "div", attrs: {}, children: [{tag: "textarea", attrs: {rows:"6", onkeyup:m.withAttr('value', scope.attr.bind(scope, 'content')), value:scope.contact.content}}]}, 
 	        {tag: "div", attrs: {}, children: [{tag: "button", attrs: {onclick:scope.save}, children: [scope.contact.id ? '保存' : '发表']}]}
 	      ]}
 	    )
@@ -2097,6 +2097,7 @@
 	        scope.contact[prop] = value;
 	      },
 	      save: function() {
+	        console.log(scope.contact);
 	        Post.save(scope.contact);
 	        Post.trigger('fill', new Post());
 	        Post.trigger('list');
@@ -2252,8 +2253,8 @@
 	    return (
 	      {tag: "div", attrs: {config:scope.renderComplete}, children: [
 	        Menu, 
-	        {tag: "h1", attrs: {}, children: [profile.name]}, 
-	        {tag: "h3", attrs: {}, children: [profile.email]}
+	        {tag: "div", attrs: {className:"status"}, children: [profile.name]}, 
+	        {tag: "h3", attrs: {className:"content"}, children: [profile.email]}
 	      ]}
 	    )
 	  },
