@@ -4,8 +4,7 @@
   "description": "",
   "main": "webpack.config.js",
   "scripts": {
-    "start": "webpack-dev-server  --display-error-details --colors --content-base ./ --hot --host 0.0.0.0",
-    "dev": " webpack -w"
+    "start": "node ./node_modules/concurrently/src/main.js --kill-others \"webpack -w\" \"node server\""
   },
   "dependencies": {
     "body-parser": "^1.14.2",
@@ -14,12 +13,14 @@
     "mithril": "^0.2.2-rc.1",
     "mithril-node-render": "^0.4.1",
     "msx": "^0.4.1",
-    "nprogress": "^0.2.0"
+    "nprogress": "^0.2.0",
+    "request-promise": "^1.0.2"
   },
   "devDependencies": {
     "css-loader": "^0.18.0",
     "msx-loader": "^0.3.0",
     "style-loader": "^0.12.4",
+    "concurrently": "^1.0.0",
     "webpack": "^1.12.1",
     "webpack-dev-server": "^1.10.1"
   },
