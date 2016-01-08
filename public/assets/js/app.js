@@ -62,9 +62,10 @@
 	};
 
 	m.isModern = function() {
+	  var agent = navigator.userAgent.toLowerCase();
 	  var regStr_ie = /msie [\d.]+;/gi ;
-	  if(navigator.userAgent.indexOf("msie") > 0) {
-	    if (navigator.userAgent.match(regStr_ie) > 9) {
+	  if(agent.indexOf('msie') > 0) {
+	    if (agent.match(regStr_ie) > 9) {
 	      return true;
 	    }
 	    return false;
@@ -1541,8 +1542,8 @@
 	              {tag: "a", attrs: {href:"javascript:;", onclick:Post.trigger.bind(Post, 'fill', item)}, children: ["编辑"]}, " |", 
 	              {tag: "a", attrs: {href:"javascript:;", onclick:scope.remove.bind(scope, item.id)}, children: ["删除"]}]}
 	            ]}, 
-	            {tag: "p", attrs: {className:"content"}, children: [
-	              m.trust(item.html)
+	            {tag: "div", attrs: {className:"content"}, children: [
+	              {tag: "div", attrs: {config:scope.renderHtml, html:item.html}}
 	            ]}
 	          ]}
 	          )})
@@ -1554,12 +1555,20 @@
 	  controller: function(params, done) {
 	    if (m.isClient) {
 	      document.title = '我的博客';
-	      NProgress.start();
+	      m.isModern() && NProgress.start();
 	    }
 
 	    var scope = {
 	      renderComplete: function(el, isInit) {
-	        !isInit && m.isClient && NProgress.done();
+	        !isInit && m.isModern() && NProgress.done();
+	      },
+
+	      renderHtml: function(el, isInit, cxt, vdom) {
+	        /**
+	         * IE 中，m.trust(item.html) 经常脚本无响应, 此方式的 innerHTML 亦无效
+	         * 所以使用 outerHTML， 但 .content 里面的 div 是会替换掉的
+	         */
+	        vdom.nodes[0].outerHTML = vdom.attrs.html;
 	      },
 
 	      remove: function(id) {
@@ -2077,14 +2086,21 @@
 	  view: function(scope) {
 	    return (
 	      {tag: "ul", attrs: {className:"menu clearfix"}, children: [
-	        {tag: "li", attrs: {}, children: [{tag: "a", attrs: {config:m.route, href:"/"}, children: ["我的博客"]}]}, 
-	        {tag: "li", attrs: {}, children: [{tag: "a", attrs: {config:m.route, href:"/aboutme"}, children: ["关于我"]}]}, 
-	        {tag: "li", attrs: {style:"display: none;"}, children: [{tag: "a", attrs: {config:m.route, href:"/exposure"}, children: ["抢曝光"]}]}, 
-	        {tag: "li", attrs: {style:"display: none;"}, children: [{tag: "a", attrs: {config:m.route, href:"/analysis"}, children: ["我的统计"]}]}
+	        {tag: "li", attrs: {}, children: [{tag: "a", attrs: {config:scope.route, href:"/"}, children: ["我的博客"]}]}, 
+	        {tag: "li", attrs: {}, children: [{tag: "a", attrs: {config:scope.route, href:"/aboutme"}, children: ["关于我"]}]}
 	      ]}
 	    )
+	  },
+
+	  controller: function() {
+	    return {
+	      route: function(el, isInit, cxt, vdom) {
+	        m.isModern() && m.route(el, isInit, cxt, vdom);
+	      }
+	    }
 	  }
 	};
+
 
 
 /***/ },
@@ -2147,7 +2163,7 @@
 
 
 	Post.list = function() {
-	  return m.request({method: 'GET', url: config.dbPrefix + 'posts'});
+	  return m.request({method: 'GET', url: config.dbPrefix + 'posts?v=' + (new Date()).getTime()});
 	};
 
 	Post.save = function(data) {
@@ -3572,12 +3588,12 @@
 	  controller: function(params, done) {
 	    if (m.isClient) {
 	      document.title = '关于我';
-	      NProgress.start();
+	      m.isModern() && NProgress.start();
 	    }
 
 	    var scope = {
 	      renderComplete: function(el, isInit) {
-	        !isInit && m.isClient && NProgress.done();
+	        !isInit && m.isModern() && NProgress.done();
 	      }
 	    };
 	    m.request({

@@ -17,9 +17,9 @@ module.exports = {
               <a href="javascript:;" onclick={Post.trigger.bind(Post, 'fill', item)}>编辑</a> |
               <a href="javascript:;" onclick={scope.remove.bind(scope, item.id)}>删除</a></div>
             </div>
-            <p className="content">
-              {m.trust(item.html)}
-            </p>
+            <div className="content">
+              <div config={scope.renderHtml} html={item.html}></div>
+            </div>
           </div>
           )})}
         </div>
@@ -30,12 +30,20 @@ module.exports = {
   controller: function(params, done) {
     if (m.isClient) {
       document.title = '我的博客';
-      NProgress.start();
+      m.isModern() && NProgress.start();
     }
 
     var scope = {
       renderComplete: function(el, isInit) {
-        !isInit && m.isClient && NProgress.done();
+        !isInit && m.isModern() && NProgress.done();
+      },
+
+      renderHtml: function(el, isInit, cxt, vdom) {
+        /**
+         * IE 中，m.trust(item.html) 经常脚本无响应, 此方式的 innerHTML 亦无效
+         * 所以使用 outerHTML， 但 .content 里面的 div 是会替换掉的
+         */
+        vdom.nodes[0].outerHTML = vdom.attrs.html;
       },
 
       remove: function(id) {

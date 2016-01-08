@@ -13,7 +13,7 @@ var Post = function(data) {
 
 
 Post.list = function() {
-  return m.request({method: 'GET', url: config.dbPrefix + 'posts'});
+  return m.request({method: 'GET', url: config.dbPrefix + 'posts?v=' + (new Date()).getTime()});
 };
 
 Post.save = function(data) {

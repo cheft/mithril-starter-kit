@@ -17,12 +17,12 @@ module.exports = {
   controller: function(params, done) {
     if (m.isClient) {
       document.title = '关于我';
-      NProgress.start();
+      m.isModern() && NProgress.start();
     }
 
     var scope = {
       renderComplete: function(el, isInit) {
-        !isInit && m.isClient && NProgress.done();
+        !isInit && m.isModern() && NProgress.done();
       }
     };
     m.request({
