@@ -713,10 +713,15 @@
 				else nextSibling.insertAdjacentHTML("beforebegin", data);
 			}
 			else {
-				if (window.Range && window.Range.prototype.createContextualFragment) {
-					parentElement.appendChild($document.createRange().createContextualFragment(data));
-				}
-				else parentElement.insertAdjacentHTML("beforeend", data);
+				// if (window.Range && window.Range.prototype.createContextualFragment) {
+				// 	parentElement.appendChild($document.createRange().createContextualFragment(data));
+				// }
+				// else parentElement.insertAdjacentHTML("beforeend", data);
+				try {
+			    parentElement.appendChild($document.createRange().createContextualFragment(data))
+			  } catch (e) {
+			    parentElement.insertAdjacentHTML("beforeend", data)
+			  }
 			}
 			var nodes = [];
 			while (parentElement.childNodes[index] !== nextSibling) {
@@ -3457,7 +3462,7 @@
 /***/ function(module, exports) {
 
 	module.exports = {
-	  dbPrefix: 'http://172.16.0.135:3000/api/'
+	  dbPrefix: typeof window == 'undefined' ? 'http://127.0.0.1:3000/api/' : '/api/'
 	  // :TODO
 	  // apiPrefix: 'http://shanghai.qfang.com/brokerweb/',
 	};

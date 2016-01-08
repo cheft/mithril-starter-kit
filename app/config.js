@@ -1,5 +1,5 @@
 module.exports = {
-  dbPrefix: 'http://172.16.0.135:3000/api/'
+  dbPrefix: typeof window == 'undefined' ? 'http://127.0.0.1:3000/api/' : '/api/'
   // :TODO
   // apiPrefix: 'http://shanghai.qfang.com/brokerweb/',
 };
