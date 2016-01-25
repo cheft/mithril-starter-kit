@@ -5,4 +5,4 @@ mithril-starter-kit
 
     npm start
 
-> http://[local IP]:3000
+> http://localhost:3000
