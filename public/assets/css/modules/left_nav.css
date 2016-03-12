@@ -1,0 +1,138 @@
+.left_nav {
+  position: fixed;
+  left: 0;
+  top: 0;
+  background: #3b3e47;
+  bottom: 0;
+  width: 136px;
+  z-index: 99;
+}
+
+.left_nav a {
+  display: block;
+  padding: 74px 0 34px;
+  text-align: center;
+  color: #9f9ea3;
+  line-height: 1;
+  font-size: 14px;
+  background-position: center 36%;
+  background-repeat: no-repeat;
+  position: relative;
+}
+
+.left_nav a:hover,
+.nav2 div a:nth-child(2),
+.nav1 div a:nth-child(1) {
+  background-color: #2f3239;
+}
+
+.left_nav div {
+  /*margin-top: 14px;*/
+}
+
+.left_nav div a:hover:before,
+.nav1 div a:nth-child(1):before,
+.nav2 div a:nth-child(2):before,
+.nav3 div a:nth-child(3):before,
+.nav4 div a:nth-child(4):before,
+.nav5 div a:nth-child(5):before,
+.left_nav > a.linktoHome:hover:before{
+  content: '';
+  position: absolute;
+  width: 2px;
+  height: 100%;
+  left: 0;
+  top: 0;
+  background: #e96735;
+}
+
+.left_nav > a {
+  background-color: #e96735;
+  background-position: center;
+  background-image: url(/images/ui/left_nav/icon-50.png);
+  background-size: 34px 32px;
+}
+
+.left_nav > a.linktoHome {
+  height: 122px;
+  padding: 0;
+}
+
+.left_nav > a.linktoHome:hover {
+  background-color:#2f3239;
+  background-image: url(/images/ui/left_nav/icon-56.png);
+}
+
+.left_nav div a:nth-child(1) {
+  background-image: url(/images/ui/left_nav/icon-51.png);
+  background-size: 32px;
+}
+
+.left_nav div a:nth-child(1):hover {
+  background-image: url(/images/ui/left_nav/icon-57.png);
+}
+
+.left_nav.nav1 div a:nth-child(1) {
+  background-image: url(/images/ui/left_nav/icon-57.png);
+}
+
+.left_nav div a:nth-child(2) {
+  background-image: url(/images/ui/left_nav/icon-58.png);
+  background-size: 32px;
+}
+
+.left_nav.nav2 div a:nth-child(2) {
+  background-image: url(/images/ui/left_nav/icon-52.png);
+  background-size: 32px;
+}
+
+.left_nav div a:nth-child(2):hover {
+  background-image: url(/images/ui/left_nav/icon-52.png);
+}
+
+.left_nav div a:nth-child(3) {
+  background-image: url(/images/ui/left_nav/icon-53.png);
+  background-size: 32px;
+}
+
+.left_nav div a:nth-child(3):hover {
+  background-image: url(/images/ui/left_nav/icon-59.png);
+}
+
+.left_nav.nav3 div a:nth-child(3) {
+  background-image: url(/images/ui/left_nav/icon-59.png);
+}
+
+.left_nav.bs div a:nth-child(3) {
+  background-image: url(/images/ui/left_nav/02.png);
+}
+
+.left_nav div a:nth-child(4) {
+  background-image: url(/images/ui/left_nav/icon-54.png);
+  background-size: 32px;
+}
+
+.left_nav div a:nth-child(4):hover {
+  background-image: url(/images/ui/left_nav/icon-60.png);
+}
+
+.left_nav.nav4 div a:nth-child(4) {
+  background-image: url(/images/ui/left_nav/icon-60.png);
+}
+
+.left_nav.bs div a:nth-child(4) {
+  background-image: url(/images/ui/left_nav/04.png);
+}
+
+.left_nav div a:nth-child(5) {
+  background-image: url(/images/ui/left_nav/icon-55.png);
+  background-size: 32px;
+}
+
+.left_nav.nav5 div a:nth-child(5) {
+  background-image: url(/images/ui/left_nav/icon-61.png);
+}
+
+.left_nav div a:nth-child(5):hover {
+  background-image: url(/images/ui/left_nav/icon-61.png);
+}

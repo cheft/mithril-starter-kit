@@ -1,0 +1,127 @@
+.cl {
+  color: #9e9ea1;
+}
+
+.cb {
+  color: #33383f;
+}
+
+.ch {
+  color: #e96733;
+}
+
+.cf {
+  color: #fff;
+}
+.bf {
+  background: #fff;
+}
+
+.bl {
+  background: #f3f4f9;
+}
+
+.bb {
+  background: #3b3e47;
+}
+
+.btn {
+  background: #e96733;
+  color: #fff;
+  font-size: 16px;
+  display: block;
+  text-align: center;
+  padding: 10px 0;
+  -webkit-border-radius: 5px;
+  -moz-border-radius: 5px;
+  border-radius: 5px;
+  border: none;
+  outline: none;
+}
+
+.btn.l {
+  padding: 10px 30px;
+  display: inline-block;
+}
+
+.input {
+  display: block;
+  padding: 10px;
+  color: #b9b9b9;
+  -webkit-border-radius: 3px;
+  -moz-border-radius: 3px;
+  border-radius: 3px;
+  font-size: 16px;
+  border: none;
+  background: #fff;
+  outline: none;
+}
+
+.input.l {
+  display: inline-block;
+}
+
+.fl {
+  font-size: 24px;
+}
+
+.fm {
+  font-size: 20px;
+}
+
+.fs {
+  font-size: 16px;
+}
+.fxs{
+    font-size: 12px;
+}
+
+.mt50 {
+  margin-top: 50px;
+}
+
+.mt40 {
+  margin-top: 40px;
+}
+
+.mt30 {
+  margin-top: 30px;
+}
+
+.mt20 {
+  margin-top: 20px;
+}
+
+.mt10 {
+  margin-top: 10px;
+}
+
+.mt35 {
+  margin-top: 35px;
+}
+
+.ml10 {
+  margin-left: 10px;
+}
+
+.center {
+  width: 1220px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.my-placeholder {
+  color: #e0e3e6;
+}
+
+.fleft {
+  float: left;
+}
+
+.fright {
+  float: right;
+}
+
+a {
+  cursor: pointer;
+}

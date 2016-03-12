@@ -1,0 +1,84 @@
+.trouble {
+  padding: 50px 0 64px;
+}
+
+.trouble h3 {
+  padding-left: 30px;
+  background: url(/images/ui/icon-04.png) no-repeat center left;
+  background: url(/images/ui/icon-04@1x.png) no-repeat center left \9;
+  *background: url(/images/ui/icon-04@1x.png) no-repeat center left;
+  background-size: 17px 24px;
+  height: 24px;
+  line-height: 24px;
+  height: 24px;
+  line-height: 24px;
+}
+
+.trouble h3 span {
+  font-weight: normal;
+  font-size: 14px;
+  margin-left: 24px;
+}
+
+.trouble h3 a {
+  font-weight: normal;
+  font-size: 14px;
+  float: right;
+  color: #9f9f9f;
+  position: relative;
+  padding-right: 14px;
+}
+
+.trouble h3 a:before {
+  content: '...';
+  position: absolute;
+  font-size: 12px;
+  width: 10px;
+  height: 12px;
+  right: 0;
+  top: 0;
+}
+
+.trouble h3 + div {
+  margin-top: 46px;
+}
+
+.trouble h3 + div a {
+  display: inline-block;
+  vertical-align: top;
+  position: relative;
+  *float: left;
+}
+
+.trouble h3 + div a.troubelFinal {
+  *float: right;
+  float: right \9;
+}
+
+.trouble h3 + div a.troubelFinal2
+ {
+  *margin-left: 22px;
+  margin-left: 22px \9;
+}
+
+.trouble h3 + div a img {
+  border: 0;
+}
+
+.trouble h3 + div a:nth-child(3n-1) {
+  margin:0 17px;
+}
+
+.trouble img {
+  display: block;
+}
+
+.trouble p {
+  position: absolute;
+  bottom: 14px;
+  left: 0px;
+  color: #fff;
+  padding-left: 20px;
+  background: url(/images/ui/icon-12.png) no-repeat left center;
+  background-size: 10px 20px;
+}

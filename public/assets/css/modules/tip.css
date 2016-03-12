@@ -1,0 +1,39 @@
+.tip {
+  position: fixed;
+  left: 50px;
+  bottom: 70px;
+  width: 600px;
+  height: 108px;
+  box-shadow: 0 0 3px rgba(0, 0, 0, .2);
+  -webkit-box-shadow: 0 0 3px rgba(0, 0, 0, .2);
+  -moz-box-shadow: 0 0 3px rgba(0, 0, 0, .2);
+}
+
+.tip > span {
+  position: absolute;
+  right: 20px;
+  top: 20px;
+  background: url(/images/ui/close.png) no-repeat center;
+  width: 17px;
+  height: 17px;
+  cursor: pointer;
+}
+
+.tip img {
+  height: 100%;
+  width: auto;
+  float: left;
+  margin-right: 50px;
+}
+
+.tip p {
+  color: #9f9f9f;
+  margin-top: 25px;
+}
+
+.tip h3 {
+  color: #e96733;
+  font-size: 18px;
+  margin-top: 15px;
+  font-weight: normal;
+}

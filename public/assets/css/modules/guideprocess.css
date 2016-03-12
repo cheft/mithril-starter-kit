@@ -1,0 +1,134 @@
+.zm_guideprocess {
+  width: 100%;
+  background-color: #fff;
+  margin-top: 72px;
+}
+
+.zm_guideprocess>.center>div {
+  float: left;
+}
+
+.zm_processleft {
+  width: 88px;
+  height: auto;
+  margin-right: 55px;
+}
+
+.zm_processright {
+  width: 1077px;
+}
+
+.zm_processleft>ul>li {
+  display: block;
+  width: 88px;
+}
+
+.zm_processleft>ul>li>div {
+  width: 88px;
+  height: 88px;
+  border-radius: 50%;
+}
+
+.zm_processleft1 {
+  background-color: #DC5645;
+  box-shadow: 0 0 10px #DC5645;
+}
+
+.zm_processleft2 {
+  background-color: #6F99A2;
+  box-shadow: 0 0 10px #6F99A2;
+}
+
+.zm_processleft3 {
+  background-color: #C7A49C;
+  box-shadow: 0 0 10px #C7A49C;
+}
+
+.zm_processleft>ul>li>div.zm_processline1,
+.zm_processleft>ul>li>div.zm_processline2 {
+  width: 4px;
+  height: 416px;
+  margin: 12px auto;
+  border-radius: 10px;
+}
+
+.zm_processleft>ul>li>div.zm_processline1 {
+  background: linear-gradient(top, #DC5645, #6F99A2);
+  background: -moz-linear-gradient(top, #DC5645, #6F99A2);
+  background: -webkit-linear-gradient(top, #DC5645, #6F99A2);
+  background: -o-linear-gradient(top, #DC5645, #6F99A2);
+  background: -ms-linear-gradient(top, #DC5645, #6F99A2);
+  filter: progid: DXImageTransform.Microsoft.Gradient(startColorStr='#DC5645', endColorStr='#6F99A2', gradientType='0');
+}
+
+.zm_processleft>ul>li>div.zm_processline2 {
+  background: linear-gradient(top, #6F99A2, #C7A49C);
+  background: -moz-linear-gradient(top, #6F99A2, #C7A49C);
+  background: -webkit-linear-gradient(top, #6F99A2, #C7A49C);
+  background: -o-linear-gradient(top, #6F99A2, #C7A49C);
+  background: -ms-linear-gradient(top, #6F99A2, #C7A49C);
+  filter: progid: DXImageTransform.Microsoft.Gradient(startColorStr='#6F99A2', endColorStr='#C7A49C', gradientType='0');
+}
+
+
+/*右边*/
+
+.zm_guidepro {
+  width: 1077px;
+  height: 530px;
+}
+
+.zm_guidepro>h1 {
+  line-height: 1;
+  padding-top: 16px;
+  margin-bottom: 20px;
+  font-size: 24px;
+  font-weight: normal;
+}
+
+.zm_guidepro1>h1 {
+  color: #DC5645;
+}
+
+.zm_guidepro2>h1 {
+  color: #6F99A2;
+}
+
+.zm_guidepro3>h1 {
+  color: #C7A49C;
+}
+
+.zm_guidepro>h3 {
+  font-size: 14px;
+  color: #9E9EA2;
+  line-height: 1;
+  margin-bottom: 53px;
+  font-weight: normal;
+}
+
+.zm_guidecover {
+  width: 1077px;
+}
+
+.zm_guidecover>a {
+  position: relative;
+  display: block;
+  float: left;
+  width: 348px;
+  height: 240px;
+  margin-right: 16px;
+}
+
+.zm_guidecover>a.zm_guidecoverf {
+  margin-right: 0;
+}
+
+.zm_guidecover>a p {
+  position: absolute;
+  bottom: 14px;
+  left: 0px;
+  color: #fff;
+  padding-left: 20px;
+  background: url(/images/ui/icon-12.png) no-repeat left center;
+  background-size: 10px 20px;
+}

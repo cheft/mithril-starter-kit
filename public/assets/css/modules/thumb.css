@@ -1,0 +1,77 @@
+.thumb {
+  background: #fff;
+}
+
+
+/* 下面的宽高为index.html中所需*/
+
+.thumb img {
+  width: 392px;
+  height: 283px;
+  display: block;
+}
+
+.thumb.example img {
+  width: 280px;
+  height: 209px;
+  border-width: 0;
+}
+.thumb.example_detail img {
+  width: 280px;
+  height: 185px;
+  border-width: 0;
+}
+
+.thumb>p {
+  position: relative;
+  padding: 20px 10px;
+  height: 28px;
+  line-height: 28px;
+}
+
+.thumb span.thumb-title {
+  position: absolute;
+  left: 20px;
+  color: #9e9ea1;
+  width: 114px;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+
+.thumb span.thumb-price {
+  position: absolute;
+  right: 20px;
+  color: #e96733;
+  text-align: right;
+  width: 92px;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+.example .thumb>p{
+  display: block;
+  width: 372px;
+}
+.example .thumb span.thumb-title {
+  position: absolute;
+  left: 20px;
+  color: #3d3e43;
+  width: 114px;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  *float: left;
+}
+
+.example .thumb span.thumb-price {
+  position: absolute;
+  right: 20px;
+  color: #e96733;
+  text-align: right;
+  width: 92px;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  *float: right;
+}

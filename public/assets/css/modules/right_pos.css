@@ -1,0 +1,289 @@
+@charset "utf-8";
+
+/* CSS Document */
+
+.right_pos {
+  position: fixed;
+  bottom: 10px;
+  right: 0;
+  width: 40px;
+  background: #3d3e43;
+  z-index: 999;
+}
+
+.right_pos div {
+  width: 40px;
+  height: 40px;
+  margin-top: 20px;
+  background-color: #3d3e43;
+  background-position: center;
+  background-repeat: no-repeat;
+  position: relative;
+  cursor: pointer;
+}
+
+.right_pos div.zm_chatpos {
+  margin-top: 0;
+  background: url(/images/ui/right_pos/icon-71.png) no-repeat center;
+  background-size: 24px 19px;
+  *background: url(/images/ui/right_pos/icon-71@1x.png) no-repeat center;
+  background: url(/images/ui/right_pos/icon-71@1x.png) no-repeat center \9;
+}
+
+.right_pos div.zm_chatpos:hover {
+  background: #e96733 url(/images/ui/right_pos/icon-81.png) no-repeat center;
+  background-size: 24px 19px;
+  *background: #e96733 url(/images/ui/right_pos/icon-81@1x.png) no-repeat center;
+  background: #e96733 url(/images/ui/right_pos/icon-81@1x.png) no-repeat center \9;
+}
+
+.right_pos div.order_repair {
+  background: url(/images/ui/right_pos/icon-72.png) no-repeat center;
+  background-size: 18px;
+  *background: url(/images/ui/right_pos/icon-72@1x.png) no-repeat center;
+  background: url(/images/ui/right_pos/icon-72@1x.png) no-repeat center \9;
+}
+
+.right_pos div.order_repair:hover {
+  background: #e96733 url(/images/ui/right_pos/icon-82.png) no-repeat center;
+  background-size: 18px;
+  *background: #e96733 url(/images/ui/right_pos/icon-82@1x.png) no-repeat center;
+  background: #e96733 url(/images/ui/right_pos/icon-82@1x.png) no-repeat center \9;
+}
+
+.right_pos div.order_install {
+  background: url(/images/ui/right_pos/icon-73.png) no-repeat center;
+  background-size: 19px 15px;
+  *background: url(/images/ui/right_pos/icon-73@1x.png) no-repeat center;
+  background: url(/images/ui/right_pos/icon-73@1x.png) no-repeat center \9;
+}
+
+.right_pos div.order_install:hover {
+  background: #e96733 url(/images/ui/right_pos/icon-84.png) no-repeat center;
+  background-size: 19px 15px;
+  *background: #e96733 url(/images/ui/right_pos/icon-84@1x.png) no-repeat center;
+  background: #e96733 url(/images/ui/right_pos/icon-84@1x.png) no-repeat center \9;
+}
+
+.right_pos div.back_to_top {
+  background: url(/images/ui/right_pos/icon-74.png) no-repeat center;
+  background-size: 20px 22px;
+  *background: url(/images/ui/right_pos/icon-74@1x.png) no-repeat center;
+  background: url(/images/ui/right_pos/icon-74@1x.png) no-repeat center \9;
+}
+
+.right_pos div.back_to_top:hover {
+  background: #e96733 url(/images/ui/right_pos/icon-83.png) no-repeat center;
+  background-size: 20px 22px;
+  *background: #e96733 url(/images/ui/right_pos/icon-83@1x.png) no-repeat center;
+  background: #e96733 url(/images/ui/right_pos/icon-83@1x.png) no-repeat center \9;
+}
+
+.right_pos div:before {
+  content: '';
+  position: absolute;
+  height: 1px;
+  width: 60%;
+  bottom: -10px;
+  left: 20%;
+  background: #9f9f9f;
+}
+
+.right_pos div:nth-child(4):before {
+  display: none;
+}
+
+.right_pos div:hover {
+  background-color: #e96733;
+}
+
+.right_pos div:hover p {
+  display: block;
+}
+
+.right_pos p {
+  position: absolute;
+  height: 40px;
+  right: 40px;
+  white-space: nowrap;
+  color: #fff;
+  line-height: 40px;
+  background: #3d3e43;
+  padding: 0 20px;
+  display: none;
+}
+
+.right_pos p:before {
+  content: '';
+  position: absolute;
+  border: 5px solid transparent;
+  border-left-color: #3d3e43;
+  top: 15px;
+  right: -10px;
+}
+
+.comDialog {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  z-index: 999;
+  width: 524px;
+  height: 597px;
+  margin-left: -262px;
+  margin-top: -299px;
+  border-radius: 5px;
+  -webkit-border-radius: 5px;
+  -moz-border-radius: 5px;
+  box-shadow: 0 0 5px #D5D5D5;
+  -webkit-box-shadow: 0 0 5px #D5D5D5;
+  -moz-box-shadow: 0 0 5px #D5D5D5;
+  background: #fff;
+  overflow: hidden;
+}
+
+.dialogCover {
+  position: relative;
+  width: 100%;
+  height: 100%;
+}
+
+.dialogCover>h1 {
+  display: block;
+  width: 524px;
+  padding-top: 46px;
+  font-size: 18px;
+  font-weight: normal;
+  color: #3C3E46;
+  text-align: center;
+  line-height: 1;
+}
+
+.dialogCover>h3 {
+  display: block;
+  width: 524px;
+  padding-top: 18px;
+  font-size: 12px;
+  font-weight: normal;
+  color: #888889;
+  line-height: 1;
+  text-align: center;
+}
+
+.dialogCover>div.close {
+  position: absolute;
+  top: 16px;
+  right: 16px;
+  width: 14px;
+  height: 14px;
+  background: url(/images/ui/icon-462.png);
+  background-size: 14px 14px;
+  cursor: pointer;
+}
+
+.dialogCover>div.dialogMain {
+  width: 474px;
+  height: 387px;
+  margin-top: 27px;
+  padding: 0 25px;
+  overflow-x: hidden;
+  overflow-y: auto;
+}
+
+.dialogCover>div.dialogMain>div.dialogkefu {
+  position: relative;
+  display: block;
+  max-width: 250px;
+  margin-bottom: 17px;
+  padding: 12px;
+  float: left;
+  clear: both;
+  color: #3C3E46;
+  border-radius: 5px;
+  -webkit-border-radius: 5px;
+  -moz-border-radius: 5px;
+  line-height: 24px;
+  background: #F3F4FA;
+}
+
+.dialogCover>div.dialogMain>div.dialogkefu:before {
+  position: absolute;
+  content: '';
+  bottom: 5px;
+  left: -9px;
+  width: 10px;
+  height: 17px;
+  background: url(/images/ui/kefu@2x.png);
+  background-size: 10px 17px;
+}
+
+.dialogCover>div.dialogMain>div.dialogGuest {
+  position: relative;
+  display: block;
+  max-width: 250px;
+  margin-bottom: 17px;
+  padding: 12px;
+  float: right;
+  clear: both;
+  border-radius: 5px;
+  -webkit-border-radius: 5px;
+  -moz-border-radius: 5px;
+  color: #fff;
+  line-height: 24px;
+  background: #E96733;
+}
+
+.dialogCover>div.dialogMain>div.dialogGuest:before {
+  position: absolute;
+  content: '';
+  bottom: 5px;
+  right: -9px;
+  width: 10px;
+  height: 17px;
+  background: url(/images/ui/guest@2x.png);
+  background-size: 10px 17px;
+}
+
+.dialogCover>div.dialogInput {
+  position: relative;
+  width: 524px;
+  height: 60px;
+  border-top: 1px solid #e0e3e6;
+}
+
+.dialogCover>div.dialogInput>textarea {
+  display: inline-block;
+  vertical-align: middle;
+  width: 422px;
+  height: 67px;
+  padding: 10px 16px;
+  border: 0;
+  resize: none;
+  color: #3C3E46;
+  line-height: 20px;
+}
+
+.dialogCover>div.dialogInput>textarea::-webkit-scrollbar {
+  display: block;
+  width: 5px;
+}
+
+.dialogCover>div.dialogInput>textarea:focus {
+  outline: none;
+}
+
+.dialogCover>div.dialogInput>button {
+  display: inline-block;
+  vertical-align: middle;
+  width: 52px;
+  height: 28px;
+  border: 0;
+  border-radius: 5px;
+  -webkit-border-radius: 5px;
+  -moz-border-radius: 5px;
+  font-size: 12px;
+  color: #fff;
+  text-align: center;
+  line-height: 28px;
+  background: #E96733;
+  cursor: pointer;
+}
